@@ -160,6 +160,18 @@ const InfoNote = styled.div`
   opacity: 0.85;
 `;
 
+const Footer = styled.footer`
+  width: 100%;
+  background: #23272f;
+  color: #fff;
+  text-align: center;
+  padding: 1.2rem 0 1rem 0;
+  margin-top: 2.5rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
+`;
+
 const sampleTexts = [
   "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet at least once.",
   "Programming is the process of creating a set of instructions that tell a computer how to perform a task. Programming can be done using a variety of computer programming languages.",
@@ -186,6 +198,7 @@ const TypingTest = () => {
   const [finalStats, setFinalStats] = useState(null);
   const timerRef = useRef();
   const startTimeRef = useRef();
+  const clustrRef = useRef(null);
 
   // Get the text to type
   const promptText = useCustom ? customText : sampleTexts[selectedSampleIdx];
@@ -216,6 +229,19 @@ const TypingTest = () => {
     const accuracy = typed.length > 0 ? Math.max(0, Math.round(((typed.length - mistakes) / typed.length) * 100)) : 100;
     setStats({ wpm, accuracy, words, mistakes });
   }, [typed, isRunning, timeLeft, promptText, duration]);
+
+  useEffect(() => {
+    // Dynamically inject ClustrMaps script
+    if (clustrRef.current) {
+      const prev = document.getElementById('clustrmaps');
+      if (prev) prev.remove();
+      const script = document.createElement('script');
+      script.id = 'clustrmaps';
+      script.type = 'text/javascript';
+      script.src = '//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM';
+      clustrRef.current.appendChild(script);
+    }
+  }, []);
 
   const startTest = () => {
     if (useCustom && !customText.trim()) {
@@ -267,99 +293,113 @@ const TypingTest = () => {
   };
 
   return (
-    <Container>
-      <Title>Typing Speed Test</Title>
-      <InfoNote>
-        <b>Note:</b><br />
-        - Select the time duration and choose a sample text or enter your own custom text.<br />
-        - You can toggle <b>Hard Mode</b> to hide character-by-character feedback.<br />
-        - Press <b>Start Test</b> to begin.<br />
-        - Your typing statistics (WPM, accuracy, words, mistakes) will be shown live as you type.<br />
-        - The test can be stopped at any time, and your results will be displayed at the end.<br />
-        - <b>Hard Mode:</b> Hides character highlighting and feedback as you type.
-      </InfoNote>
-      <ControlsRow>
-        <Select value={duration / 60} onChange={handleDurationChange} disabled={isRunning}>
-          <option value={30}>30 minutes</option>
-          <option value={60}>60 minutes</option>
-        </Select>
-        <Select value={selectedSampleIdx} onChange={handleSampleChange} disabled={isRunning || useCustom}>
-          {sampleTexts.map((t, i) => (
-            <option value={i} key={i}>Sample {i + 1}</option>
-          ))}
-        </Select>
-        <ToggleButton
-          type="button"
-          active={useCustom}
-          onClick={() => setUseCustom(u => !u)}
-          disabled={isRunning}
-        >
-          {useCustom ? 'Use Sample Text' : 'Use Custom Text'}
-        </ToggleButton>
-        <ToggleButton
-          type="button"
-          active={hardMode}
-          onClick={() => setHardMode(h => !h)}
-          disabled={isRunning}
-        >
-          {hardMode ? 'Hard Mode On' : 'Hard Mode Off'}
-        </ToggleButton>
-      </ControlsRow>
-      {useCustom && !isRunning && (
+    <>
+      <Container>
+        <Title>Typing Speed Test</Title>
+        <InfoNote>
+          <b>Note:</b><br />
+          - Select the time duration and choose a sample text or enter your own custom text.<br />
+          - You can toggle <b>Hard Mode</b> to hide character-by-character feedback.<br />
+          - Press <b>Start Test</b> to begin.<br />
+          - Your typing statistics (WPM, accuracy, words, mistakes) will be shown live as you type.<br />
+          - The test can be stopped at any time, and your results will be displayed at the end.<br />
+          - <b>Hard Mode:</b> Hides character highlighting and feedback as you type.
+        </InfoNote>
+        <ControlsRow>
+          <Select value={duration / 60} onChange={handleDurationChange} disabled={isRunning}>
+            <option value={30}>30 minutes</option>
+            <option value={60}>60 minutes</option>
+          </Select>
+          <Select value={selectedSampleIdx} onChange={handleSampleChange} disabled={isRunning || useCustom}>
+            {sampleTexts.map((t, i) => (
+              <option value={i} key={i}>Sample {i + 1}</option>
+            ))}
+          </Select>
+          <ToggleButton
+            type="button"
+            active={useCustom}
+            onClick={() => setUseCustom(u => !u)}
+            disabled={isRunning}
+          >
+            {useCustom ? 'Use Sample Text' : 'Use Custom Text'}
+          </ToggleButton>
+          <ToggleButton
+            type="button"
+            active={hardMode}
+            onClick={() => setHardMode(h => !h)}
+            disabled={isRunning}
+          >
+            {hardMode ? 'Hard Mode On' : 'Hard Mode Off'}
+          </ToggleButton>
+        </ControlsRow>
+        {useCustom && !isRunning && (
+          <TypingArea
+            value={customText}
+            onChange={e => setCustomText(e.target.value)}
+            placeholder="Enter your custom text here..."
+          />
+        )}
+        <TimeDisplay>
+          Time Remaining: {formatTime(timeLeft)}
+        </TimeDisplay>
+        <PromptBox style={{ opacity: isRunning ? 1 : 0.7, minHeight: 80 }}>
+          {promptText.length === 0 ? (
+            <span style={{ color: '#888' }}>Enter or select text above</span>
+          ) : (
+            hardMode && isRunning
+              ? promptText
+              : renderPrompt()
+          )}
+        </PromptBox>
         <TypingArea
-          value={customText}
-          onChange={e => setCustomText(e.target.value)}
-          placeholder="Enter your custom text here..."
+          value={typed}
+          onChange={e => isRunning && setTyped(e.target.value)}
+          placeholder={isRunning ? 'Start typing here...' : `Click 'Start Test' to begin`}
+          disabled={!isRunning}
+          style={hardMode && isRunning ? { color: 'transparent', textShadow: '0 0 8px #888' } : {}}
+          spellCheck={false}
+          autoFocus={isRunning}
         />
-      )}
-      <TimeDisplay>
-        Time Remaining: {formatTime(timeLeft)}
-      </TimeDisplay>
-      <PromptBox style={{ opacity: isRunning ? 1 : 0.7, minHeight: 80 }}>
-        {promptText.length === 0 ? (
-          <span style={{ color: '#888' }}>Enter or select text above</span>
-        ) : (
-          hardMode && isRunning
-            ? promptText
-            : renderPrompt()
+        <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+          {!isRunning ? (
+            <Button green onClick={startTest}>Start Test</Button>
+          ) : (
+            <Button green onClick={stopTest}>Stop Test</Button>
+          )}
+        </div>
+        <StatsRow>
+          <Stat>WPM<br /><b>{stats.wpm}</b></Stat>
+          <Stat>Accuracy<br /><b>{stats.accuracy}%</b></Stat>
+          <Stat>Words<br /><b>{stats.words}</b></Stat>
+          <Stat>Mistakes<br /><b>{stats.mistakes}</b></Stat>
+          <Stat>
+            <span style={{ fontWeight: 400 }}>Mode</span><br />
+            <span>{hardMode ? 'Hard' : 'Normal'}</span>
+          </Stat>
+        </StatsRow>
+        {showResult && finalStats && (
+          <ResultBox>
+            <h2>Test Complete!</h2>
+            <p><b>WPM:</b> {finalStats.wpm}</p>
+            <p><b>Accuracy:</b> {finalStats.accuracy}%</p>
+            <p><b>Words Typed:</b> {finalStats.words}</p>
+            <p><b>Mistakes:</b> {finalStats.mistakes}</p>
+          </ResultBox>
         )}
-      </PromptBox>
-      <TypingArea
-        value={typed}
-        onChange={e => isRunning && setTyped(e.target.value)}
-        placeholder={isRunning ? 'Start typing here...' : `Click 'Start Test' to begin`}
-        disabled={!isRunning}
-        style={hardMode && isRunning ? { color: 'transparent', textShadow: '0 0 8px #888' } : {}}
-        spellCheck={false}
-        autoFocus={isRunning}
-      />
-      <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
-        {!isRunning ? (
-          <Button green onClick={startTest}>Start Test</Button>
-        ) : (
-          <Button green onClick={stopTest}>Stop Test</Button>
-        )}
-      </div>
-      <StatsRow>
-        <Stat>WPM<br /><b>{stats.wpm}</b></Stat>
-        <Stat>Accuracy<br /><b>{stats.accuracy}%</b></Stat>
-        <Stat>Words<br /><b>{stats.words}</b></Stat>
-        <Stat>Mistakes<br /><b>{stats.mistakes}</b></Stat>
-        <Stat>
-          <span style={{ fontWeight: 400 }}>Mode</span><br />
-          <span>{hardMode ? 'Hard' : 'Normal'}</span>
-        </Stat>
-      </StatsRow>
-      {showResult && finalStats && (
-        <ResultBox>
-          <h2>Test Complete!</h2>
-          <p><b>WPM:</b> {finalStats.wpm}</p>
-          <p><b>Accuracy:</b> {finalStats.accuracy}%</p>
-          <p><b>Words Typed:</b> {finalStats.words}</p>
-          <p><b>Mistakes:</b> {finalStats.mistakes}</p>
-        </ResultBox>
-      )}
-    </Container>
+      </Container>
+      <Footer>
+        <div style={{ marginBottom: '0.5rem' }}>
+          <b>GRE ESSAY CHECK</b> &copy; {new Date().getFullYear()}<br />
+          Built and developed by Mithil Mistry
+        </div>
+        <div ref={clustrRef} style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+        <noscript>
+          <a href="http://www.clustrmaps.com/map/Mithilmistry.tech" title="Visit tracker for Mithilmistry.tech">
+            <img src="//www.clustrmaps.com/map_v2.png?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM" alt="ClustrMaps" style={{ width: 80, height: 40, objectFit: 'contain' }} />
+          </a>
+        </noscript>
+      </Footer>
+    </>
   );
 };
 

@@ -3,6 +3,18 @@ import styled, { css } from 'styled-components';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 
+// Default theme fallback
+const defaultTheme = {
+  border: '#dee2e6',
+  surface: '#ffffff',
+  text: '#333333',
+  primary: '#007bff',
+  secondary: '#6c757d',
+  background: '#f8f9fa',
+  shadow: '0 2px 4px rgba(0,0,0,0.1)',
+  transition: 'all 0.3s ease'
+};
+
 const Container = styled.div`
   max-width: 900px;
   margin: 2rem auto;
@@ -23,18 +35,18 @@ const ControlsRow = styled.div`
 const Select = styled.select`
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background-color: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  background-color: ${({ theme = defaultTheme }) => theme.surface};
+  color: ${({ theme = defaultTheme }) => theme.text};
   font-size: 1rem;
   cursor: pointer;
-  transition: ${({ theme }) => theme.transition};
-  &:focus { outline: none; border-color: ${({ theme }) => theme.primary}; }
+  transition: ${({ theme = defaultTheme }) => theme.transition};
+  &:focus { outline: none; border-color: ${({ theme = defaultTheme }) => theme.primary}; }
 `;
 const Button = styled.button`
   padding: 0.5rem 1.5rem;
   border-radius: 6px;
-  background-color: ${({ theme, green, red }) => red ? '#dc3545' : green ? '#28a745' : theme.primary};
+  background-color: ${({ theme = defaultTheme, green, red }) => red ? '#dc3545' : green ? '#28a745' : theme.primary};
   color: #fff;
   font-size: 1rem;
   font-weight: 500;
@@ -42,7 +54,7 @@ const Button = styled.button`
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
   transition: background 0.2s;
-  &:hover { background-color: ${({ theme, green, red }) => red ? '#b52a37' : green ? '#218838' : theme.secondary}; }
+  &:hover { background-color: ${({ theme = defaultTheme, green, red }) => red ? '#b52a37' : green ? '#218838' : theme.secondary}; }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 `;
 const TimeDisplay = styled.div`
@@ -53,22 +65,22 @@ const TimeDisplay = styled.div`
 const IssueCard = styled.div`
   padding: 2rem 2rem 1.5rem 2rem;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.surface};
-  box-shadow: ${({ theme }) => theme.shadow};
+  background-color: ${({ theme = defaultTheme }) => theme.surface};
+  box-shadow: ${({ theme = defaultTheme }) => theme.shadow};
   margin-bottom: 2rem;
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
   font-size: 1.08rem;
 `;
 const IssuePrompt = styled.div`
   font-size: 1.18rem;
   font-weight: 600;
   margin-bottom: 1.1rem;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme = defaultTheme }) => theme.text};
 `;
 const IssueInstructions = styled.div`
   font-size: 1.04rem;
-  color: ${({ theme }) => theme.text};
-  background: ${({ theme }) => theme.background};
+  color: ${({ theme = defaultTheme }) => theme.text};
+  background: ${({ theme = defaultTheme }) => theme.background};
   border-radius: 6px;
   padding: 0.8rem 1rem;
   margin-top: 0.5rem;
@@ -79,15 +91,15 @@ const WritingArea = styled.textarea`
   max-height: 400px;
   padding: 1rem;
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.border};
-  background-color: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  background-color: ${({ theme = defaultTheme }) => theme.surface};
+  color: ${({ theme = defaultTheme }) => theme.text};
   font-size: 1.1rem;
   line-height: 1.6;
   resize: vertical;
   overflow-y: auto;
-  transition: ${({ theme }) => theme.transition};
-  &:focus { outline: none; border-color: ${({ theme }) => theme.primary}; }
+  transition: ${({ theme = defaultTheme }) => theme.transition};
+  &:focus { outline: none; border-color: ${({ theme = defaultTheme }) => theme.primary}; }
 `;
 const StatsRow = styled.div`
   display: flex;
@@ -97,22 +109,22 @@ const StatsRow = styled.div`
   font-weight: 500;
 `;
 const Stat = styled.div`
-  background: ${({ theme }) => theme.background};
+  background: ${({ theme = defaultTheme }) => theme.background};
   border-radius: 6px;
   padding: 0.7rem 1.2rem;
   min-width: 110px;
   text-align: center;
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
 `;
 const ResultBox = styled.div`
-  background: ${({ theme }) => theme.surface};
+  background: ${({ theme = defaultTheme }) => theme.surface};
   border: 2px solid #28a745;
   border-radius: 8px;
   padding: 2rem;
   margin: 2rem 0;
   text-align: center;
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme = defaultTheme }) => theme.text};
 `;
 const ThemeCheckboxGroup = styled.div`
   display: flex;
@@ -136,9 +148,9 @@ const DropdownContainer = styled.div`
 const DropdownButton = styled(Button)`
   width: 100%;
   text-align: left;
-  background: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
+  background: ${({ theme = defaultTheme }) => theme.surface};
+  color: ${({ theme = defaultTheme }) => theme.text};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
   margin-bottom: 0;
 `;
 const DropdownList = styled.div`
@@ -148,8 +160,8 @@ const DropdownList = styled.div`
   width: 100%;
   max-height: 320px;
   overflow-y: auto;
-  background: ${({ theme }) => theme.surface};
-  border: 1px solid ${({ theme }) => theme.border};
+  background: ${({ theme = defaultTheme }) => theme.surface};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
   border-radius: 6px;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -158,30 +170,41 @@ const DropdownSearch = styled.input`
   width: 100%;
   padding: 0.5rem 1rem;
   border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
+  border-bottom: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  background: ${({ theme = defaultTheme }) => theme.surface};
+  color: ${({ theme = defaultTheme }) => theme.text};
   font-size: 1rem;
   &:focus { outline: none; }
 `;
 const DropdownItem = styled.div`
   padding: 0.7rem 1rem;
   cursor: pointer;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-  background: ${({ selected, theme }) => selected ? theme.primary : 'inherit'};
-  color: ${({ selected, theme }) => selected ? '#fff' : theme.text};
-  &:hover { background: ${({ theme }) => theme.background}; }
+  border-bottom: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  background: ${({ selected, theme = defaultTheme }) => selected ? theme.primary : 'inherit'};
+  color: ${({ selected, theme = defaultTheme }) => selected ? '#fff' : theme.text};
+  &:hover { background: ${({ theme = defaultTheme }) => theme.background}; }
   font-size: 0.98rem;
 `;
 const InfoNote = styled.div`
-  background: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.text};
+  background: ${({ theme = defaultTheme }) => theme.background};
+  color: ${({ theme = defaultTheme }) => theme.text};
   border-left: 4px solid #17a2b8;
   padding: 0.7rem 1rem;
   margin-bottom: 1rem;
   font-size: 1rem;
   font-style: italic;
   opacity: 0.85;
+`;
+const Footer = styled.footer`
+  width: 100%;
+  background: #23272f;
+  color: #fff;
+  text-align: center;
+  padding: 1.2rem 0 1rem 0;
+  margin-top: 2.5rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
 `;
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
@@ -404,37 +427,71 @@ const GREWriting = () => {
   const [highFreqWords, setHighFreqWords] = useState([]);
   const [nlWords, setNLWords] = useState([]);
   const timerRef = useRef();
+  const clustrRef = useRef(null);
+
   useEffect(() => {
-    fetch('greIssues.json')
-      .then(res => res.json())
+    console.log('Fetching greIssues.json...');
+    fetch('/GreEssay/greIssues.json')
+      .then(res => {
+        if (!res.ok) {
+          console.error('Error fetching greIssues.json:', res.status, res.statusText);
+          return {};
+        }
+        return res.json();
+      })
       .then(data => {
+        console.log('greIssues.json fetched successfully:', data);
         setIssuesByTheme(data);
-        // flatten for dropdown
         const flat = [];
         Object.entries(data).forEach(([theme, arr]) => {
           arr.forEach(issue => flat.push({ ...issue, theme }));
         });
+        console.log('Flattened issues:', flat);
         setAllIssues(flat);
+        console.log('issuesByTheme state after update:', issuesByTheme);
+        console.log('allIssues state after update:', allIssues);
+
       })
       .catch(err => {
+        console.error('Error fetching greIssues.json:', err);
         setIssuesByTheme({});
         setAllIssues([]);
       });
 
-    fetch('wordlist.json')
-      .then(res => res.json())
+    console.log('Fetching wordlist.json...');
+    fetch('/GreEssay/wordlist.json')
+      .then(res => {
+        if (!res.ok) {
+          console.error('Error fetching wordlist.json:', res.status, res.statusText);
+          return {};
+        }
+        return res.json();
+      })
       .then(data => {
-        console.log('Loaded wordlist data:', data);
-        console.log('HF words:', data.HF);
-        console.log('NL words:', data.NL);
+        console.log('wordlist.json fetched successfully:', data);
         setHighFreqWords(data.HF || []);
         setNLWords(data.NL || []);
+        console.log('highFreqWords state after update:', highFreqWords);
+        console.log('nlWords state after update:', nlWords);
+
       })
       .catch(err => {
         console.error('Error loading wordlist:', err);
         setHighFreqWords([]);
         setNLWords([]);
       });
+
+    // Dynamically inject ClustrMaps script
+    if (clustrRef.current) {
+      // Remove any previous script
+      const prev = document.getElementById('clustrmaps');
+      if (prev) prev.remove();
+      const script = document.createElement('script');
+      script.id = 'clustrmaps';
+      script.type = 'text/javascript';
+      script.src = '//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM&cl=ffffff&w=a';
+      clustrRef.current.appendChild(script);
+    }
   }, []);
   // Unique themes
   const allThemes = Object.keys(issuesByTheme);
@@ -574,229 +631,243 @@ const GREWriting = () => {
     console.log('Split paragraphs:', essayText.split(/\s{2,}/));
   };
   return (
-    <Container>
-      <Title>GRE Issue Writing Practice</Title>
-      <InfoNote>
-        <b>Note:</b><br />
-        - The topic will be displayed after pressing the <b>Start Test</b> button, as per GRE rules.<br />
-        - You can choose between predefined GRE topics or write on a custom topic.<br />
-        - For custom topics, you can specify your own prompt and instructions.
-      </InfoNote>
+    <>
+      <Container>
+        <Title>GRE Issue Writing Practice</Title>
+        <InfoNote>
+          <b>Note:</b><br />
+          - The topic will be displayed after pressing the <b>Start Test</b> button, as per GRE rules.<br />
+          - You can choose between predefined GRE topics or write on a custom topic.<br />
+          - For custom topics, you can specify your own prompt and instructions.
+        </InfoNote>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <Button
-          onClick={() => setIsCustomTopic(!isCustomTopic)}
-          style={{ marginRight: '1rem' }}
-        >
-          {isCustomTopic ? 'Use GRE Topics' : 'Use Custom Topic'}
-        </Button>
-      </div>
-
-      {isCustomTopic ? (
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Your Topic/Prompt:
-            </label>
-            <WritingArea
-              value={customTopic}
-              onChange={e => setCustomTopic(e.target.value)}
-              placeholder="Enter your custom topic or prompt here..."
-              style={{ minHeight: '100px', marginBottom: '1rem' }}
-              disabled={isRunning}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Instructions (optional):
-            </label>
-            <WritingArea
-              value={customInstructions}
-              onChange={e => setCustomInstructions(e.target.value)}
-              placeholder="Enter any specific instructions for your topic..."
-              style={{ minHeight: '80px' }}
-              disabled={isRunning}
-            />
-          </div>
-        </div>
-      ) : (
-        <>
-          <ThemeCheckboxGroup>
-            {allThemes.map(theme => (
-              <ThemeCheckboxLabel key={theme}>
-                <Checkbox
-                  type="checkbox"
-                  checked={selectedThemes.includes(theme)}
-                  onChange={() => handleThemeCheck(theme)}
-                  disabled={isRunning}
-                />
-                {theme}
-              </ThemeCheckboxLabel>
-            ))}
-          </ThemeCheckboxGroup>
-          <div style={{ marginBottom: '1rem' }}>
-            <Button type="button" red onClick={handleClearThemes} disabled={isRunning}>Clear Themes</Button>
-            <Button type="button" onClick={handleRandomise} disabled={isRunning}>Randomise</Button>
-          </div>
-          <ControlsRow>
-            <DropdownContainer>
-              <DropdownButton onClick={() => setDropdownOpen(o => !o)} disabled={isRunning}>
-                {selectedIssue ? `${selectedIssue.theme}: ${selectedIssue.prompt.slice(0, 40)}...` : 'Select Issue'}
-              </DropdownButton>
-              {dropdownOpen && (
-                <DropdownList>
-                  <DropdownSearch
-                    type="text"
-                    placeholder="Search issues..."
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    autoFocus
-                  />
-                  {filteredIssues.map((issue, idx) => (
-                    <DropdownItem
-                      key={issue.id}
-                      selected={idx === selectedIssueIdx}
-                      onClick={() => handleDropdownSelect(idx)}
-                    >
-                      <b>{issue.theme}</b>: {issue.prompt.slice(0, 60)}...
-                    </DropdownItem>
-                  ))}
-                </DropdownList>
-              )}
-            </DropdownContainer>
-          </ControlsRow>
-        </>
-      )}
-
-      <select
-        value={duration / 60}
-        onChange={handleDurationChange}
-        disabled={isRunning}
-        style={{ padding: '0.5rem 1rem', borderRadius: 4, border: '1px solid #ccc', fontSize: '1rem' }}
-      >
-        <option value={30}>30 minutes</option>
-        <option value={60}>60 minutes</option>
-      </select>
-
-      <InfoNote>
-        To start a new paragraph in your essay, please use double enters (press Enter twice).
-      </InfoNote>
-
-      <TimeDisplay>
-        Time Remaining: {formatTime(timeLeft)}
-      </TimeDisplay>
-
-      {isRunning && (
-        <IssueCard>
-          <h2>{isCustomTopic ? 'Custom Topic' : selectedIssue.theme}</h2>
-          <IssuePrompt>
-            {isCustomTopic ? customTopic : selectedIssue.prompt}
-          </IssuePrompt>
-          <IssueInstructions>
-            <b>Instructions:</b> {isCustomTopic ? customInstructions || 'Write a well-reasoned response to the given topic.' : selectedIssue.instructions}
-          </IssueInstructions>
-        </IssueCard>
-      )}
-
-      <WritingArea
-        value={response}
-        onChange={e => isRunning && setResponse(e.target.value)}
-        placeholder={isRunning ? 'Start writing your response here...' : 'Click Start Test to begin'}
-        disabled={!isRunning}
-        spellCheck={false}
-      />
-
-      <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
-        {!isRunning ? (
           <Button
-            green
-            onClick={startTest}
-            disabled={isCustomTopic && !customTopic.trim()}
+            onClick={() => setIsCustomTopic(!isCustomTopic)}
+            style={{ marginRight: '1rem' }}
           >
-            Start Test
+            {isCustomTopic ? 'Use GRE Topics' : 'Use Custom Topic'}
           </Button>
+        </div>
+
+        {isCustomTopic ? (
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                Your Topic/Prompt:
+              </label>
+              <WritingArea
+                value={customTopic}
+                onChange={e => setCustomTopic(e.target.value)}
+                placeholder="Enter your custom topic or prompt here..."
+                style={{ minHeight: '100px', marginBottom: '1rem' }}
+                disabled={isRunning}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                Instructions (optional):
+              </label>
+              <WritingArea
+                value={customInstructions}
+                onChange={e => setCustomInstructions(e.target.value)}
+                placeholder="Enter any specific instructions for your topic..."
+                style={{ minHeight: '80px' }}
+                disabled={isRunning}
+              />
+            </div>
+          </div>
         ) : (
-          <Button green onClick={stopTest}>Stop Test</Button>
+          <>
+            <ThemeCheckboxGroup>
+              {allThemes.map(theme => (
+                <ThemeCheckboxLabel key={theme}>
+                  <Checkbox
+                    type="checkbox"
+                    checked={selectedThemes.includes(theme)}
+                    onChange={() => handleThemeCheck(theme)}
+                    disabled={isRunning}
+                  />
+                  {theme}
+                </ThemeCheckboxLabel>
+              ))}
+            </ThemeCheckboxGroup>
+            <div style={{ marginBottom: '1rem' }}>
+              <Button type="button" red onClick={handleClearThemes} disabled={isRunning}>Clear Themes</Button>
+              <Button type="button" onClick={handleRandomise} disabled={isRunning}>Randomise</Button>
+            </div>
+            <ControlsRow>
+              <DropdownContainer>
+                <DropdownButton onClick={() => setDropdownOpen(o => !o)} disabled={isRunning}>
+                  {selectedIssue ? `${selectedIssue.theme}: ${selectedIssue.prompt.slice(0, 40)}...` : 'Select Issue'}
+                </DropdownButton>
+                {dropdownOpen && (
+                  <DropdownList>
+                    <DropdownSearch
+                      type="text"
+                      placeholder="Search issues..."
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      autoFocus
+                    />
+                    {filteredIssues.map((issue, idx) => (
+                      <DropdownItem
+                        key={issue.id}
+                        selected={idx === selectedIssueIdx}
+                        onClick={() => handleDropdownSelect(idx)}
+                      >
+                        <b>{issue.theme}</b>: {issue.prompt.slice(0, 60)}...
+                      </DropdownItem>
+                    ))}
+                  </DropdownList>
+                )}
+              </DropdownContainer>
+            </ControlsRow>
+          </>
         )}
-      </div>
 
-      <StatsRow>
-        <Stat>WPM<br /><b>{stats.wpm}</b></Stat>
-        <Stat>Words<br /><b>{stats.words}</b></Stat>
-        <Stat>Time<br /><b>{formatTime(timeLeft)}</b></Stat>
-      </StatsRow>
+        <select
+          value={duration / 60}
+          onChange={handleDurationChange}
+          disabled={isRunning}
+          style={{ padding: '0.5rem 1rem', borderRadius: 4, border: '1px solid #ccc', fontSize: '1rem' }}
+        >
+          <option value={30}>30 minutes</option>
+          <option value={60}>60 minutes</option>
+        </select>
 
-      {showResult && finalStats && (
-        <ResultBox>
-          <h2>Test Complete!</h2>
-          <p><b>WPM:</b> {finalStats.wpm}</p>
-          <p><b>Words Typed:</b> {finalStats.words}</p>
-          {essayEval && (
-            <>
-              <hr style={{ margin: '1em 0' }} />
-              <h3>Essay Evaluation</h3>
-              <p><b>Final Score:</b> <span style={{ fontSize: '1.3em' }}>{essayEval.finalScore} / 6</span></p>
+        <InfoNote>
+          To start a new paragraph in your essay, please use double enters (press Enter twice).
+        </InfoNote>
 
-              <h4>Content Analysis:</h4>
-              <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
-                <li>Topic Relevance: {essayEval.breakdown.topicRelevance}/2</li>
-                <li>Argument Quality: {essayEval.breakdown.argumentQuality}/2</li>
-                <li>Word Count: {essayEval.metrics.wordCount} words ({essayEval.breakdown.wordCount}/1)</li>
-                <li>Structure: {essayEval.breakdown.structure}/1</li>
-                <li>NLP Style: {essayEval.nlpScore.toFixed(1)}/6</li>
-              </ul>
+        <TimeDisplay>
+          Time Remaining: {formatTime(timeLeft)}
+        </TimeDisplay>
 
-              <h4>Vocabulary Insights:</h4>
-              <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
-                <li>High-Frequency Words Used: {essayEval.metrics.highFreqCount}</li>
-                <li>NL Words Used: {essayEval.metrics.usedNLWords.length}</li>
-                <li>Vocabulary Diversity: {essayEval.metrics.vocabDiversity}%</li>
-                <li>Long Words ({'>'}7 letters): {essayEval.metrics.longWords}</li>
-                <li>Unique Long Words: {essayEval.metrics.uniqueLongWords}</li>
-                <li>Average Sentence Length: {essayEval.metrics.avgSentenceLength} words</li>
-              </ul>
+        {isRunning && (
+          <IssueCard>
+            <h2>{isCustomTopic ? 'Custom Topic' : selectedIssue.theme}</h2>
+            <IssuePrompt>
+              {isCustomTopic ? customTopic : selectedIssue.prompt}
+            </IssuePrompt>
+            <IssueInstructions>
+              <b>Instructions:</b> {isCustomTopic ? customInstructions || 'Write a well-reasoned response to the given topic.' : selectedIssue.instructions}
+            </IssueInstructions>
+          </IssueCard>
+        )}
 
-              <h4>Topic Analysis:</h4>
-              <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
-                <li>Directly Addresses Prompt: {essayEval.topicAnalysis.directAddress ? '✅' : '❌'}</li>
-                <li>Clear Position Stated: {essayEval.topicAnalysis.hasPosition ? '✅' : '❌'}</li>
-                <li>Prompt Terms Used: {essayEval.topicAnalysis.promptTermUsage}</li>
-              </ul>
+        <WritingArea
+          value={response}
+          onChange={e => isRunning && setResponse(e.target.value)}
+          placeholder={isRunning ? 'Start writing your response here...' : 'Click Start Test to begin'}
+          disabled={!isRunning}
+          spellCheck={false}
+        />
 
-              <h4>Argument Analysis:</h4>
-              <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
-                <li>Examples Provided: {essayEval.argumentAnalysis.hasExamples ? '✅' : '❌'}</li>
-                <li>Reasoning Included: {essayEval.argumentAnalysis.hasReasoning ? '✅' : '❌'}</li>
-                <li>Counter-Arguments: {essayEval.argumentAnalysis.hasCounterArguments ? '✅' : '❌'}</li>
-                <li>Conclusion Present: {essayEval.argumentAnalysis.conclusionPresent ? '✅' : '❌'}</li>
-              </ul>
-
-              <h4>Improvement Suggestions:</h4>
-              <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
-                {!essayEval.topicAnalysis.directAddress &&
-                  <li>⚠️ Make sure to directly address the prompt in your introduction</li>}
-                {!essayEval.topicAnalysis.hasPosition &&
-                  <li>⚠️ Clearly state your position on the issue</li>}
-                {!essayEval.argumentAnalysis.hasExamples &&
-                  <li>⚠️ Include specific examples to support your arguments</li>}
-                {!essayEval.argumentAnalysis.hasCounterArguments &&
-                  <li>⚠️ Consider addressing counter-arguments to strengthen your position</li>}
-                {essayEval.metrics.wordCount < 300 &&
-                  <li>⚠️ Aim for at least 300 words to fully develop your argument</li>}
-              </ul>
-
-              <small style={{ opacity: 0.7 }}>
-                <b>Note:</b> This is an automated evaluation using a simple model checking basic linguistic features and structure. It is not a substitute for human evaluation and should not be used to predict your actual GRE score. Focus on the breakdown and suggestions for improvement.
-              </small>
-
-              <div style={{ marginTop: '1.5rem' }}>
-                <Button onClick={handleDownload} green>Download Essay (.docx)</Button>
-              </div>
-            </>
+        <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+          {!isRunning ? (
+            <Button
+              green
+              onClick={startTest}
+              disabled={isCustomTopic && !customTopic.trim()}
+            >
+              Start Test
+            </Button>
+          ) : (
+            <Button green onClick={stopTest}>Stop Test</Button>
           )}
-        </ResultBox>
-      )}
-    </Container>
+        </div>
+
+        <StatsRow>
+          <Stat>WPM<br /><b>{stats.wpm}</b></Stat>
+          <Stat>Words<br /><b>{stats.words}</b></Stat>
+          <Stat>Time<br /><b>{formatTime(timeLeft)}</b></Stat>
+        </StatsRow>
+
+        {showResult && finalStats && (
+          <ResultBox>
+            <h2>Test Complete!</h2>
+            <p><b>WPM:</b> {finalStats.wpm}</p>
+            <p><b>Words Typed:</b> {finalStats.words}</p>
+            {essayEval && (
+              <>
+                <hr style={{ margin: '1em 0' }} />
+                <h3>Essay Evaluation</h3>
+                <p><b>Final Score:</b> <span style={{ fontSize: '1.3em' }}>{essayEval.finalScore} / 6</span></p>
+
+                <h4>Content Analysis:</h4>
+                <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
+                  <li>Topic Relevance: {essayEval.breakdown.topicRelevance}/2</li>
+                  <li>Argument Quality: {essayEval.breakdown.argumentQuality}/2</li>
+                  <li>Word Count: {essayEval.metrics.wordCount} words ({essayEval.breakdown.wordCount}/1)</li>
+                  <li>Structure: {essayEval.breakdown.structure}/1</li>
+                  <li>NLP Style: {essayEval.nlpScore.toFixed(1)}/6</li>
+                </ul>
+
+                <h4>Vocabulary Insights:</h4>
+                <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
+                  <li>High-Frequency Words Used: {essayEval.metrics.highFreqCount}</li>
+                  <li>NL Words Used: {essayEval.metrics.usedNLWords.length}</li>
+                  <li>Vocabulary Diversity: {essayEval.metrics.vocabDiversity}%</li>
+                  <li>Long Words ({'>'}7 letters): {essayEval.metrics.longWords}</li>
+                  <li>Unique Long Words: {essayEval.metrics.uniqueLongWords}</li>
+                  <li>Average Sentence Length: {essayEval.metrics.avgSentenceLength} words</li>
+                </ul>
+
+                <h4>Topic Analysis:</h4>
+                <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
+                  <li>Directly Addresses Prompt: {essayEval.topicAnalysis.directAddress ? '✅' : '❌'}</li>
+                  <li>Clear Position Stated: {essayEval.topicAnalysis.hasPosition ? '✅' : '❌'}</li>
+                  <li>Prompt Terms Used: {essayEval.topicAnalysis.promptTermUsage}</li>
+                </ul>
+
+                <h4>Argument Analysis:</h4>
+                <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
+                  <li>Examples Provided: {essayEval.argumentAnalysis.hasExamples ? '✅' : '❌'}</li>
+                  <li>Reasoning Included: {essayEval.argumentAnalysis.hasReasoning ? '✅' : '❌'}</li>
+                  <li>Counter-Arguments: {essayEval.argumentAnalysis.hasCounterArguments ? '✅' : '❌'}</li>
+                  <li>Conclusion Present: {essayEval.argumentAnalysis.conclusionPresent ? '✅' : '❌'}</li>
+                </ul>
+
+                <h4>Improvement Suggestions:</h4>
+                <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
+                  {!essayEval.topicAnalysis.directAddress &&
+                    <li>⚠️ Make sure to directly address the prompt in your introduction</li>}
+                  {!essayEval.topicAnalysis.hasPosition &&
+                    <li>⚠️ Clearly state your position on the issue</li>}
+                  {!essayEval.argumentAnalysis.hasExamples &&
+                    <li>⚠️ Include specific examples to support your arguments</li>}
+                  {!essayEval.argumentAnalysis.hasCounterArguments &&
+                    <li>⚠️ Consider addressing counter-arguments to strengthen your position</li>}
+                  {essayEval.metrics.wordCount < 300 &&
+                    <li>⚠️ Aim for at least 300 words to fully develop your argument</li>}
+                </ul>
+
+                <small style={{ opacity: 0.7 }}>
+                  <b>Note:</b> This is an automated evaluation using a simple model checking basic linguistic features and structure. It is not a substitute for human evaluation and should not be used to predict your actual GRE score. Focus on the breakdown and suggestions for improvement.
+                </small>
+
+                <div style={{ marginTop: '1.5rem' }}>
+                  <Button onClick={handleDownload} green>Download Essay (.docx)</Button>
+                </div>
+              </>
+            )}
+          </ResultBox>
+        )}
+      </Container>
+      <Footer>
+        <div style={{ marginBottom: '0.5rem' }}>
+          <b>GRE ESSAY CHECK</b> &copy; {new Date().getFullYear()}<br />
+          Built and developed by Mithil Mistry
+        </div>
+        <div ref={clustrRef} style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+        <noscript>
+          <a href="http://www.clustrmaps.com/map/Mithilmistry.tech" title="Visit tracker for Mithilmistry.tech">
+            <img src="//www.clustrmaps.com/map_v2.png?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM" alt="ClustrMaps" style={{ width: 80, height: 40, objectFit: 'contain' }} />
+          </a>
+        </noscript>
+      </Footer>
+    </>
   );
 };
 export default GREWriting; 

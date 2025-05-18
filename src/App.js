@@ -16,11 +16,13 @@ function App() {
     <ThemeProvider theme={currentTheme}>
       <GlobalStyles />
       <Router>
-        <Navigation toggleTheme={toggleTheme} currentTheme={theme} />
-        <Routes>
-          <Route path="/" element={<TypingTest />} />
-          <Route path="/gre-writing" element={<GREWriting />} />
-        </Routes>
+        <div style={{ minHeight: '100vh', backgroundColor: currentTheme.body }}>
+          <Navigation toggleTheme={toggleTheme} currentTheme={theme} />
+          <Routes>
+            <Route path="/" element={<TypingTest />} />
+            <Route path="/gre-writing" element={<GREWriting />} />
+          </Routes>
+        </div>
       </Router>
     </ThemeProvider>
   );
