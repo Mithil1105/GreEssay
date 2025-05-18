@@ -19,11 +19,19 @@ const Container = styled.div`
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
+  @media (max-width: 600px) {
+    padding: 0 0.5rem;
+    margin: 1rem 0;
+  }
 `;
 const Title = styled.h1`
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  @media (max-width: 600px) {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
 `;
 const ControlsRow = styled.div`
   display: flex;
@@ -31,6 +39,11 @@ const ControlsRow = styled.div`
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   align-items: flex-end;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 const Select = styled.select`
   padding: 0.5rem 1rem;
@@ -87,7 +100,7 @@ const IssueInstructions = styled.div`
 `;
 const WritingArea = styled.textarea`
   width: 100%;
-  min-height: 300px;
+  min-height: 200px;
   max-height: 400px;
   padding: 1rem;
   border-radius: 4px;
@@ -100,6 +113,11 @@ const WritingArea = styled.textarea`
   overflow-y: auto;
   transition: ${({ theme = defaultTheme }) => theme.transition};
   &:focus { outline: none; border-color: ${({ theme = defaultTheme }) => theme.primary}; }
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    min-height: 120px;
+    padding: 0.7rem;
+  }
 `;
 const StatsRow = styled.div`
   display: flex;
@@ -107,6 +125,12 @@ const StatsRow = styled.div`
   margin-top: 1.5rem;
   font-size: 1.1rem;
   font-weight: 500;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
 `;
 const Stat = styled.div`
   background: ${({ theme = defaultTheme }) => theme.background};
@@ -115,6 +139,10 @@ const Stat = styled.div`
   min-width: 110px;
   text-align: center;
   border: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  @media (max-width: 600px) {
+    min-width: 80px;
+    padding: 0.5rem 0.7rem;
+  }
 `;
 const ResultBox = styled.div`
   background: ${({ theme = defaultTheme }) => theme.surface};
@@ -144,6 +172,10 @@ const Checkbox = styled.input`
 const DropdownContainer = styled.div`
   position: relative;
   min-width: 320px;
+  @media (max-width: 600px) {
+    min-width: 100%;
+    width: 100%;
+  }
 `;
 const DropdownButton = styled(Button)`
   width: 100%;
@@ -152,6 +184,10 @@ const DropdownButton = styled(Button)`
   color: ${({ theme = defaultTheme }) => theme.text};
   border: 1px solid ${({ theme = defaultTheme }) => theme.border};
   margin-bottom: 0;
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+  }
 `;
 const DropdownList = styled.div`
   position: absolute;
@@ -205,6 +241,11 @@ const Footer = styled.footer`
   font-size: 1.08rem;
   letter-spacing: 0.01em;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+    padding: 0.7rem 0 0.5rem 0;
+    margin-top: 1.2rem;
+  }
 `;
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
