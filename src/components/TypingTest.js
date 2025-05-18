@@ -149,6 +149,17 @@ const ResultBox = styled.div`
   color: ${({ theme }) => theme.text};
 `;
 
+const InfoNote = styled.div`
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  border-left: 4px solid #17a2b8;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.85;
+`;
+
 const sampleTexts = [
   "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet at least once.",
   "Programming is the process of creating a set of instructions that tell a computer how to perform a task. Programming can be done using a variety of computer programming languages.",
@@ -258,6 +269,14 @@ const TypingTest = () => {
   return (
     <Container>
       <Title>Typing Speed Test</Title>
+      <InfoNote>
+        <b>Note:</b><br />
+        - Select the time duration and choose a sample text or enter your own custom text.<br />
+        - You can toggle <b>Hard Mode</b> to hide character-by-character feedback.<br />
+        - Press <b>Start Test</b> to begin.<br />
+        - Your typing statistics (WPM, accuracy, words, mistakes) will be shown live as you type.<br />
+        - The test can be stopped at any time, and your results will be displayed at the end.
+      </InfoNote>
       <ControlsRow>
         <Select value={duration / 60} onChange={handleDurationChange} disabled={isRunning}>
           <option value={30}>30 minutes</option>
