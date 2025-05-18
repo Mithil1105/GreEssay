@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 
@@ -59,7 +59,7 @@ const Select = styled.select`
 const Button = styled.button`
   padding: 0.5rem 1.5rem;
   border-radius: 6px;
-  background-color: ${({ theme = defaultTheme, green, red }) => red ? '#dc3545' : green ? '#28a745' : theme.primary};
+  background-color: ${({ theme = defaultTheme, $green, $red }) => $red ? '#dc3545' : $green ? '#28a745' : theme.primary};
   color: #fff;
   font-size: 1rem;
   font-weight: 500;
@@ -67,7 +67,7 @@ const Button = styled.button`
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
   transition: background 0.2s;
-  &:hover { background-color: ${({ theme = defaultTheme, green, red }) => red ? '#b52a37' : green ? '#218838' : theme.secondary}; }
+  &:hover { background-color: ${({ theme = defaultTheme, $green, $red }) => $red ? '#b52a37' : $green ? '#218838' : theme.secondary}; }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 `;
 const TimeDisplay = styled.div`
@@ -250,6 +250,165 @@ const Footer = styled.footer`
     margin-top: 1.2rem;
   }
 `;
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const PreviousResultsContainer = styled.div`
+  margin-top: 2rem;
+  border-top: 2px solid ${({ theme = defaultTheme }) => theme.border};
+  padding-top: 1rem;
+  background: ${({ theme = defaultTheme }) => theme.surface};
+`;
+
+const ResultsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const ResultsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const ResultItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  background: ${({ theme = defaultTheme }) => theme.background};
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  transition: ${({ theme = defaultTheme }) => theme.transition};
+
+  &:hover {
+    box-shadow: ${({ theme = defaultTheme }) => theme.shadow};
+  }
+`;
+
+const ResultInfo = styled.div`
+  flex: 1;
+`;
+
+const ResultDate = styled.div`
+  font-size: 0.9rem;
+  color: ${({ theme = defaultTheme }) => theme.secondary};
+  margin-bottom: 0.5rem;
+`;
+
+const ResultTopic = styled.div`
+  font-weight: 500;
+  color: ${({ theme = defaultTheme }) => theme.text};
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: ${fadeIn} 0.2s ease-out;
+  padding: 1rem;
+`;
+
+const ModalContent = styled.div`
+  background: ${({ theme = defaultTheme }) => theme.surface};
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  color: ${({ theme = defaultTheme }) => theme.text};
+
+  h2, h3, h4 {
+    color: ${({ theme = defaultTheme }) => theme.text};
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: ${({ theme = defaultTheme }) => theme.text};
+    line-height: 1.6;
+  }
+`;
+
+const EssayText = styled.div`
+  white-space: pre-wrap;
+  background: ${({ theme = defaultTheme }) => theme.background};
+  color: ${({ theme = defaultTheme }) => theme.text};
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  line-height: 1.6;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+`;
+
+const StatGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    color: ${({ theme = defaultTheme }) => theme.text};
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background: ${({ theme = defaultTheme }) => theme.background};
+    border-radius: 4px;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: ${({ theme = defaultTheme }) => theme.text};
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  &:hover { opacity: 1; }
+`;
+
+const ModalSection = styled.div`
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid ${({ theme = defaultTheme }) => theme.border};
+  &:last-child { border-bottom: none; }
+`;
+
+const InfoBox = styled.div`
+  background: ${({ theme = defaultTheme }) => theme.background};
+  border-left: 4px solid ${({ theme = defaultTheme }) => theme.primary};
+  padding: 1rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: ${({ theme = defaultTheme }) => theme.text};
+`;
+
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -453,30 +612,113 @@ function evaluateEssay(text, prompt, highFreqWords = [], nlWords = []) {
 const GREWriting = () => {
   const [issuesByTheme, setIssuesByTheme] = useState({});
   const [allIssues, setAllIssues] = useState([]);
-  const [selectedIssueIdx, setSelectedIssueIdx] = useState(0);
+  const [selectedIssueIdx, setSelectedIssueIdx] = useState(() => {
+    const saved = localStorage.getItem('selectedIssueIdx');
+    return saved ? parseInt(saved, 10) : 0;
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedThemes, setSelectedThemes] = useState([]);
-  const [response, setResponse] = useState('');
-  const [duration, setDuration] = useState(30 * 60);
-  const [timeLeft, setTimeLeft] = useState(30 * 60);
-  const [isRunning, setIsRunning] = useState(false);
+  const [selectedThemes, setSelectedThemes] = useState(() => {
+    const saved = localStorage.getItem('selectedThemes');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [response, setResponse] = useState(() => {
+    const saved = localStorage.getItem('essayResponse');
+    return saved || '';
+  });
+  const [duration, setDuration] = useState(() => {
+    const saved = localStorage.getItem('duration');
+    return saved ? parseInt(saved, 10) : 30 * 60;
+  });
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const saved = localStorage.getItem('timeLeft');
+    return saved ? parseInt(saved, 10) : 30 * 60;
+  });
+  const [isRunning, setIsRunning] = useState(() => {
+    const saved = localStorage.getItem('isRunning');
+    return saved === 'true';
+  });
   const [showResult, setShowResult] = useState(false);
   const [finalStats, setFinalStats] = useState(null);
   const [stats, setStats] = useState({ wpm: 0, words: 0 });
   const [essayEval, setEssayEval] = useState(null);
-  const [isCustomTopic, setIsCustomTopic] = useState(false);
-  const [customTopic, setCustomTopic] = useState('');
-  const [customInstructions, setCustomInstructions] = useState('');
+  const [isCustomTopic, setIsCustomTopic] = useState(() => {
+    const saved = localStorage.getItem('isCustomTopic');
+    return saved === 'true';
+  });
+  const [customTopic, setCustomTopic] = useState(() => {
+    const saved = localStorage.getItem('customTopic');
+    return saved || '';
+  });
+  const [customInstructions, setCustomInstructions] = useState(() => {
+    const saved = localStorage.getItem('customInstructions');
+    return saved || '';
+  });
   const [highFreqWords, setHighFreqWords] = useState([]);
   const [nlWords, setNLWords] = useState([]);
   const [flash, setFlash] = useState(false);
   const timerRef = useRef();
   const clustrRef = useRef(null);
 
+  // Add new state for previous results
+  const [previousResults, setPreviousResults] = useState(() => {
+    const saved = localStorage.getItem('previousResults');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Add new state for current result
+  const [currentResult, setCurrentResult] = useState(() => {
+    const saved = localStorage.getItem('currentResult');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [selectedResult, setSelectedResult] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('selectedIssueIdx', selectedIssueIdx.toString());
+  }, [selectedIssueIdx]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedThemes', JSON.stringify(selectedThemes));
+  }, [selectedThemes]);
+
+  useEffect(() => {
+    localStorage.setItem('essayResponse', response);
+  }, [response]);
+
+  useEffect(() => {
+    localStorage.setItem('duration', duration.toString());
+  }, [duration]);
+
+  useEffect(() => {
+    localStorage.setItem('timeLeft', timeLeft.toString());
+  }, [timeLeft]);
+
+  useEffect(() => {
+    localStorage.setItem('isRunning', isRunning.toString());
+  }, [isRunning]);
+
+  useEffect(() => {
+    localStorage.setItem('isCustomTopic', isCustomTopic.toString());
+  }, [isCustomTopic]);
+
+  useEffect(() => {
+    localStorage.setItem('customTopic', customTopic);
+  }, [customTopic]);
+
+  useEffect(() => {
+    localStorage.setItem('customInstructions', customInstructions);
+  }, [customInstructions]);
+
+  const clearLocalStorage = () => {
+    localStorage.removeItem('essayResponse');
+    localStorage.removeItem('timeLeft');
+    localStorage.removeItem('isRunning');
+  };
+
   useEffect(() => {
     console.log('Fetching greIssues.json...');
-    fetch('/GreEssay/greIssues.json')
+    fetch(`${process.env.PUBLIC_URL}/greIssues.json`)
       .then(res => {
         if (!res.ok) {
           console.error('Error fetching greIssues.json:', res.status, res.statusText);
@@ -504,7 +746,7 @@ const GREWriting = () => {
       });
 
     console.log('Fetching wordlist.json...');
-    fetch('/GreEssay/wordlist.json')
+    fetch(`${process.env.PUBLIC_URL}/wordlist.json`)
       .then(res => {
         if (!res.ok) {
           console.error('Error fetching wordlist.json:', res.status, res.statusText);
@@ -599,6 +841,7 @@ const GREWriting = () => {
     }
   };
   const startTest = () => {
+    clearLocalStorage();
     setResponse('');
     setStats({ wpm: 0, words: 0 });
     setTimeLeft(duration);
@@ -610,22 +853,43 @@ const GREWriting = () => {
     if (manual) {
       if (!window.confirm('Are you sure you want to submit your essay?')) return;
     }
+    clearLocalStorage();
     setIsRunning(false);
     setShowResult(true);
     setFinalStats(stats);
+
     const prompt = isCustomTopic ? customTopic : selectedIssue.prompt;
-    setEssayEval(evaluateEssay(response, prompt, highFreqWords, nlWords));
+    const evaluation = evaluateEssay(response, prompt, highFreqWords, nlWords);
+    setEssayEval(evaluation);
+
+    // Create result object
+    const result = {
+      id: Date.now(),
+      date: new Date().toLocaleString(),
+      prompt,
+      response,
+      stats,
+      evaluation,
+      isCustomTopic,
+      instructions: isCustomTopic ? customInstructions : selectedIssue?.instructions
+    };
+
+    // Save current result
+    setCurrentResult(result);
+
+    // Add to previous results
+    setPreviousResults(prev => [result, ...prev]);
   };
   const handleDurationChange = e => {
     const mins = parseInt(e.target.value, 10);
     setDuration(mins * 60);
     setTimeLeft(mins * 60);
   };
-  const handleDownload = async () => {
-    const topic = isCustomTopic ? customTopic : selectedIssue?.prompt;
-    const instructions = isCustomTopic ? customInstructions : selectedIssue?.instructions;
-    const essayText = response;
-    const { wpm, words, timeLeft } = finalStats || {}; // Get final stats
+  const handleDownload = async (result) => {
+    const topic = isCustomTopic ? customTopic : result.prompt;
+    const instructions = isCustomTopic ? customInstructions : result.instructions;
+    const essayText = result.response;
+    const { wpm, words, timeLeft } = result || {}; // Get final stats
     const timeTaken = duration - (timeLeft || 0); // Calculate time taken
 
     if (!topic || !essayText) {
@@ -684,6 +948,37 @@ const GREWriting = () => {
     console.log('Original Essay Text:', essayText);
     console.log('Split paragraphs:', essayText.split(/\s{2,}/));
   };
+
+  // Add new useEffect for saving results
+  useEffect(() => {
+    localStorage.setItem('previousResults', JSON.stringify(previousResults));
+  }, [previousResults]);
+
+  useEffect(() => {
+    localStorage.setItem('currentResult', JSON.stringify(currentResult));
+  }, [currentResult]);
+
+  // Add function to clear history
+  const clearHistory = () => {
+    if (window.confirm('Are you sure you want to clear all previous results?')) {
+      setPreviousResults([]);
+      localStorage.removeItem('previousResults');
+    }
+  };
+
+  // Add function to delete specific result
+  const deleteResult = (id) => {
+    setPreviousResults(prev => prev.filter(result => result.id !== id));
+  };
+
+  const openResultModal = (result) => {
+    setSelectedResult(result);
+  };
+
+  const closeResultModal = () => {
+    setSelectedResult(null);
+  };
+
   return (
     <>
       <Container>
@@ -747,7 +1042,7 @@ const GREWriting = () => {
               ))}
             </ThemeCheckboxGroup>
             <div style={{ marginBottom: '1rem' }}>
-              <Button type="button" red onClick={handleClearThemes} disabled={isRunning}>Clear Themes</Button>
+              <Button type="button" $red onClick={handleClearThemes} disabled={isRunning}>Clear Themes</Button>
               <Button type="button" onClick={handleRandomise} disabled={isRunning}>Randomise</Button>
             </div>
             <ControlsRow>
@@ -821,14 +1116,14 @@ const GREWriting = () => {
         <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
           {!isRunning ? (
             <Button
-              green
+              $green
               onClick={startTest}
               disabled={isCustomTopic && !customTopic.trim()}
             >
               Start Test
             </Button>
           ) : (
-            <Button green onClick={() => stopTest(true)}>Stop Test</Button>
+            <Button $green onClick={() => stopTest(true)}>Stop Test</Button>
           )}
         </div>
 
@@ -902,9 +1197,126 @@ const GREWriting = () => {
                 </small>
 
                 <div style={{ marginTop: '1.5rem' }}>
-                  <Button onClick={handleDownload} green>Download Essay (.docx)</Button>
+                  <Button onClick={() => handleDownload(finalStats)} $green>Download Essay (.docx)</Button>
                 </div>
               </>
+            )}
+
+            <PreviousResultsContainer>
+              <ResultsHeader>
+                <h3>Previous Essay Results</h3>
+                <Button $red onClick={clearHistory}>Clear History</Button>
+              </ResultsHeader>
+
+              <InfoBox>
+                <b>Note:</b> Your essay results are stored in your browser's local storage.
+                They will persist until you clear your browser data or manually clear the history.
+                Results are specific to this browser and device.
+              </InfoBox>
+
+              <ResultsList>
+                {previousResults.length === 0 ? (
+                  <p style={{ fontStyle: 'italic', opacity: 0.7 }}>No previous results</p>
+                ) : (
+                  previousResults.map((result) => (
+                    <ResultItem key={result.id}>
+                      <ResultInfo>
+                        <ResultDate>{result.date}</ResultDate>
+                        <ResultTopic>{result.prompt.slice(0, 100)}...</ResultTopic>
+                      </ResultInfo>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <Button onClick={() => openResultModal(result)}>View Result</Button>
+                        <Button $red onClick={() => deleteResult(result.id)}>Delete</Button>
+                      </div>
+                    </ResultItem>
+                  ))
+                )}
+              </ResultsList>
+            </PreviousResultsContainer>
+
+            {selectedResult && (
+              <Modal onClick={closeResultModal}>
+                <ModalContent onClick={e => e.stopPropagation()}>
+                  <CloseButton onClick={closeResultModal}>&times;</CloseButton>
+
+                  <ModalSection>
+                    <h2>Essay Result</h2>
+                    <ResultDate>{selectedResult.date}</ResultDate>
+                  </ModalSection>
+
+                  <ModalSection>
+                    <h3>Topic</h3>
+                    <p>{selectedResult.prompt}</p>
+                    {selectedResult.instructions && (
+                      <>
+                        <h4>Instructions</h4>
+                        <p>{selectedResult.instructions}</p>
+                      </>
+                    )}
+                  </ModalSection>
+
+                  <ModalSection>
+                    <h3>Score: {selectedResult.evaluation.finalScore} / 6</h3>
+                    <StatGrid>
+                      <div>
+                        <h4>Content Analysis</h4>
+                        <ul>
+                          <li>
+                            <span>Topic Relevance:</span>
+                            <span>{selectedResult.evaluation.breakdown.topicRelevance}/2</span>
+                          </li>
+                          <li>
+                            <span>Argument Quality:</span>
+                            <span>{selectedResult.evaluation.breakdown.argumentQuality}/2</span>
+                          </li>
+                          <li>
+                            <span>Structure:</span>
+                            <span>{selectedResult.evaluation.breakdown.structure}/1</span>
+                          </li>
+                          <li>
+                            <span>NLP Style:</span>
+                            <span>{selectedResult.evaluation.nlpScore.toFixed(1)}/6</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4>Statistics</h4>
+                        <ul>
+                          <li>
+                            <span>Words:</span>
+                            <span>{selectedResult.stats.words}</span>
+                          </li>
+                          <li>
+                            <span>WPM:</span>
+                            <span>{selectedResult.stats.wpm}</span>
+                          </li>
+                          <li>
+                            <span>Vocabulary Diversity:</span>
+                            <span>{selectedResult.evaluation.metrics.vocabDiversity}%</span>
+                          </li>
+                          <li>
+                            <span>Paragraphs:</span>
+                            <span>{selectedResult.evaluation.metrics.paragraphs}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </StatGrid>
+                  </ModalSection>
+
+                  <ModalSection>
+                    <h3>Essay</h3>
+                    <EssayText>
+                      {selectedResult.response}
+                    </EssayText>
+                  </ModalSection>
+
+                  <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                    <Button $green onClick={() => handleDownload(selectedResult)}>
+                      Download Essay (.docx)
+                    </Button>
+                  </div>
+                </ModalContent>
+              </Modal>
             )}
           </ResultBox>
         )}
