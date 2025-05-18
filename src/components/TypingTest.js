@@ -275,7 +275,8 @@ const TypingTest = () => {
         - You can toggle <b>Hard Mode</b> to hide character-by-character feedback.<br />
         - Press <b>Start Test</b> to begin.<br />
         - Your typing statistics (WPM, accuracy, words, mistakes) will be shown live as you type.<br />
-        - The test can be stopped at any time, and your results will be displayed at the end.
+        - The test can be stopped at any time, and your results will be displayed at the end.<br />
+        - <b>Hard Mode:</b> Hides character highlighting and feedback as you type.
       </InfoNote>
       <ControlsRow>
         <Select value={duration / 60} onChange={handleDurationChange} disabled={isRunning}>
