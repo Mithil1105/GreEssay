@@ -171,6 +171,16 @@ const DropdownItem = styled.div`
   &:hover { background: ${({ theme }) => theme.background}; }
   font-size: 0.98rem;
 `;
+const InfoNote = styled.div`
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  border-left: 4px solid #17a2b8;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.85;
+`;
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -283,7 +293,9 @@ const GREWriting = () => {
   return (
     <Container>
       <Title>GRE Issue Writing Practice</Title>
-      {/* Theme selection first */}
+      <InfoNote>
+        <b>Note:</b> The topic will be displayed after pressing the Start Test button, as per GRE rules.
+      </InfoNote>
       <ThemeCheckboxGroup>
         {allThemes.map(theme => (
           <ThemeCheckboxLabel key={theme}>
