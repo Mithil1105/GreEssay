@@ -188,15 +188,51 @@ function formatTime(seconds) {
   const s = seconds % 60;
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
-function evaluateEssay(text, prompt) {
+function evaluateEssay(text, prompt, highFreqWords = [], nlWords = []) {
+  console.log('Evaluating essay with:');
+  console.log('HF words available:', highFreqWords);
+  console.log('NL words available:', nlWords);
+
   // --- Basic text analysis ---
   const wordList = text.trim().split(/\s+/).filter(Boolean);
+  console.log('Essay words:', wordList);
   const wordCount = wordList.length;
   const uniqueWords = new Set(wordList.map(w => w.toLowerCase())).size;
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
   const avgSentenceLength = sentences.length ? (wordCount / sentences.length).toFixed(1) : 0;
   const paragraphsArr = text.split(/\n{2,}/).filter(p => p.trim().length > 0);
   const paragraphCount = paragraphsArr.length;
+
+  // --- High Frequency Word Count ---
+  const highFreqWordSet = new Set(highFreqWords.map(word => word.toLowerCase()));
+  let highFreqCount = 0;
+  const essayWordSet = new Set(wordList.map(word => word.toLowerCase()));
+  console.log('Essay word set:', Array.from(essayWordSet));
+  console.log('HF word set:', Array.from(highFreqWordSet));
+
+  essayWordSet.forEach(word => {
+    if (highFreqWordSet.has(word)) {
+      highFreqCount++;
+      console.log('Found HF word:', word);
+    }
+  });
+
+  // --- NL Words Analysis ---
+  const nlWordSet = new Set(nlWords.map(word => word.toLowerCase()));
+  const usedNLWords = [];
+  console.log('NL word set:', Array.from(nlWordSet));
+
+  essayWordSet.forEach(word => {
+    if (nlWordSet.has(word)) {
+      usedNLWords.push(word);
+      console.log('Found NL word:', word);
+    }
+  });
+
+  // --- Vocabulary Analysis ---
+  const longWords = wordList.filter(w => w.length > 7).length;
+  const uniqueLongWords = new Set(wordList.filter(w => w.length > 7).map(w => w.toLowerCase())).size;
+  const vocabDiversity = (uniqueWords / wordCount * 100).toFixed(1);
 
   // --- Structure detection ---
   const introParagraph = paragraphCount > 0 ? paragraphsArr[0] : '';
@@ -332,7 +368,12 @@ function evaluateEssay(text, prompt) {
       wordCount,
       uniqueWords,
       avgSentenceLength,
-      paragraphs: paragraphCount
+      paragraphs: paragraphCount,
+      highFreqCount,
+      usedNLWords,
+      longWords,
+      uniqueLongWords,
+      vocabDiversity
     },
     calculation: {
       weightedRaw: weightedRaw.toFixed(2),
@@ -360,6 +401,8 @@ const GREWriting = () => {
   const [isCustomTopic, setIsCustomTopic] = useState(false);
   const [customTopic, setCustomTopic] = useState('');
   const [customInstructions, setCustomInstructions] = useState('');
+  const [highFreqWords, setHighFreqWords] = useState([]);
+  const [nlWords, setNLWords] = useState([]);
   const timerRef = useRef();
   useEffect(() => {
     fetch('greIssues.json')
@@ -376,6 +419,21 @@ const GREWriting = () => {
       .catch(err => {
         setIssuesByTheme({});
         setAllIssues([]);
+      });
+
+    fetch('wordlist.json')
+      .then(res => res.json())
+      .then(data => {
+        console.log('Loaded wordlist data:', data);
+        console.log('HF words:', data.HF);
+        console.log('NL words:', data.NL);
+        setHighFreqWords(data.HF || []);
+        setNLWords(data.NL || []);
+      })
+      .catch(err => {
+        console.error('Error loading wordlist:', err);
+        setHighFreqWords([]);
+        setNLWords([]);
       });
   }, []);
   // Unique themes
@@ -445,7 +503,7 @@ const GREWriting = () => {
     setShowResult(true);
     setFinalStats(stats);
     const prompt = isCustomTopic ? customTopic : selectedIssue.prompt;
-    setEssayEval(evaluateEssay(response, prompt));
+    setEssayEval(evaluateEssay(response, prompt, highFreqWords, nlWords));
   };
   const handleDurationChange = e => {
     const mins = parseInt(e.target.value, 10);
@@ -686,6 +744,16 @@ const GREWriting = () => {
                 <li>Word Count: {essayEval.metrics.wordCount} words ({essayEval.breakdown.wordCount}/1)</li>
                 <li>Structure: {essayEval.breakdown.structure}/1</li>
                 <li>NLP Style: {essayEval.nlpScore.toFixed(1)}/6</li>
+              </ul>
+
+              <h4>Vocabulary Insights:</h4>
+              <ul style={{ textAlign: 'left', margin: '0.5em 0' }}>
+                <li>High-Frequency Words Used: {essayEval.metrics.highFreqCount}</li>
+                <li>NL Words Used: {essayEval.metrics.usedNLWords.length}</li>
+                <li>Vocabulary Diversity: {essayEval.metrics.vocabDiversity}%</li>
+                <li>Long Words ({'>'}7 letters): {essayEval.metrics.longWords}</li>
+                <li>Unique Long Words: {essayEval.metrics.uniqueLongWords}</li>
+                <li>Average Sentence Length: {essayEval.metrics.avgSentenceLength} words</li>
               </ul>
 
               <h4>Topic Analysis:</h4>
