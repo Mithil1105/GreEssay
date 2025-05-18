@@ -47,10 +47,10 @@ const Navigation = ({ toggleTheme, currentTheme }) => {
   return (
     <Nav>
       <NavLinks>
-        <NavButton to="/gre-writing" active={location.pathname === '/gre-writing' ? 1 : 0}>
-          GRE Essays
+        <NavButton to="/gre-writing" active={location.pathname === '/gre-writing' || location.pathname === '/' ? 1 : 0}>
+          GRE Writing
         </NavButton>
-        <NavButton to="/typing" active={location.pathname === '/typing' ? 1 : 0}>
+        <NavButton to="/typing-practice" active={location.pathname === '/typing-practice' ? 1 : 0}>
           Typing Practice
         </NavButton>
       </NavLinks>

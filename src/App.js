@@ -20,7 +20,8 @@ function App() {
           <Navigation toggleTheme={toggleTheme} currentTheme={theme} />
           <Routes>
             <Route path="/" element={<GREWriting />} />
-            <Route path="/typing" element={<TypingTest />} />
+            <Route path="/gre-writing" element={<GREWriting />} />
+            <Route path="/typing-practice" element={<TypingTest />} />
           </Routes>
         </div>
       </Router>
