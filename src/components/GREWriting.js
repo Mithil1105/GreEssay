@@ -674,11 +674,11 @@ const GREWriting = () => {
   return (
     <>
       <Container>
-        <Title>GRE Issue Writing Practice</Title>
+        <Title>ScoreWise Essay Practice</Title>
         <InfoNote>
           <b>Note:</b><br />
           - The topic will be displayed after pressing the <b>Start Test</b> button, as per GRE rules.<br />
-          - You can choose between predefined GRE topics or write on a custom topic.<br />
+          - You can choose between predefined ScoreWise topics or write on a custom topic.<br />
           - For custom topics, you can specify your own prompt and instructions.
         </InfoNote>
 
@@ -687,7 +687,7 @@ const GREWriting = () => {
             onClick={() => setIsCustomTopic(!isCustomTopic)}
             style={{ marginRight: '1rem' }}
           >
-            {isCustomTopic ? 'Use GRE Topics' : 'Use Custom Topic'}
+            {isCustomTopic ? 'Use ScoreWise Topics' : 'Use Custom Topic'}
           </Button>
         </div>
 
@@ -898,7 +898,7 @@ const GREWriting = () => {
       </Container>
       <Footer>
         <div style={{ marginBottom: '0.5rem' }}>
-          <b>GRE ESSAY CHECK</b> &copy; {new Date().getFullYear()}<br />
+          <b>ScoreWise</b> &copy; {new Date().getFullYear()}<br />
           Built and developed by Mithil Mistry
         </div>
         <div ref={clustrRef} style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />

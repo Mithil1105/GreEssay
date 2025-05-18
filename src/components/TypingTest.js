@@ -206,10 +206,10 @@ const Footer = styled.footer`
 `;
 
 const sampleTexts = [
-  "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet at least once.",
-  "Programming is the process of creating a set of instructions that tell a computer how to perform a task. Programming can be done using a variety of computer programming languages.",
-  "The Internet is a global network of billions of computers and other electronic devices. With the Internet, it's possible to access almost any information, communicate with anyone else in the world, and do much more.",
-  "Typing speed is a useful skill for students and professionals alike. Practicing regularly can help improve both speed and accuracy.",
+  `The cat sat on the mat near the window, watching the birds outside. The sun was shining brightly, and the sky was a clear, happy blue. A little boy ran across the wide, green field with a red kite trailing behind him. He laughed with joy as the wind picked up, helping the kite soar higher and higher. Birds chirped in the tall trees nearby, adding music to the warm day. Flowers of yellow, pink, and purple bloomed in the garden, dancing in the breeze.\n\nIt was a perfect day to be outdoors. The boy's dog barked excitedly, chasing him across the grass. The soft grass tickled their feet and paws. Butterflies fluttered from one flower to the next. Clouds floated slowly in the sky like cotton candy. Everything around them felt calm, simple, and full of life.\n\nThey stopped to rest under a big tree, where the shade cooled them down. The boy took out a small sandwich and gave his dog a treat. Birds kept singing, and the kite swayed gently in the breeze above them. Days like these are special because they remind us of the little things that make us smile—sunshine, fresh air, and time with a good friend.`,
+  `On a breezy Saturday afternoon, Clara wandered through the bustling local farmers market, a canvas bag slung over her shoulder. The vibrant scents of fresh herbs, citrus fruits, and blooming flowers filled the air. Each vendor stall displayed a rainbow of colors—red strawberries, golden peaches, green leafy kale, and multicolored peppers. The sounds of soft chatter, laughter, and acoustic guitar mixed together, forming a pleasant hum that felt like the heartbeat of the town.\n\nClara paused to admire a musician playing violin beneath a striped canopy. Children danced nearby, their faces sticky from melting popsicles. She picked up a bunch of lavender and held it to her nose, inhaling its calming fragrance. Further down, she sampled local honey and warm sourdough slices.\n\nThe market was more than a place to shop; it was a place of stories. An old couple sold handmade soaps wrapped in twine, and a young artist painted tiny landscapes on seashells. Everywhere, there was life: messy, honest, and beautiful. Clara paid for her items, smiled at a vendor, and made her way home with a heart lighter than her bag.`,
+  `Amidst the persistent hum of the urban sprawl, Evelyn craved a pocket of calm. She found it in the local library, a timeless refuge untouched by the frenzy outside. The heavy oak doors creaked as she entered, stepping into a world of silence and scent—dusty parchment, old leather bindings, and subtle hints of coffee from the study nook.\n\nTowering shelves held books like monuments of forgotten worlds. She passed rows of ancient texts: faded atlases, medieval treatises, and philosophical volumes with brittle pages. She chose a volume on Byzantine iconoclasm and another on quantum paradoxes. Settling into a wooden chair, she opened the first and felt time dissolve.\n\nThunder rumbled faintly outside, but inside, the world was still. The library lights buzzed overhead, indifferent to the layers of thought unfolding in her mind. She highlighted sentences, scribbled notes in the margins, and underlined questions that only led to more questions.\n\nHere, Evelyn wasn't escaping reality—she was exploring its depth. In a space where silence screamed and stillness moved, she discovered the exhilarating beauty of intellectual pursuit.`,
+  `In examining the collision between epistemological skepticism and deterministic frameworks within quantum mechanics, one confronts a duality that transcends classical interpretation. The observer paradox, exemplified in Schrödinger's thought experiment, posits not merely a conundrum of outcomes but a restructuring of perception itself.\n\nIs the cat both alive and dead, or are our measurement limitations the true variable? Quantum entanglement defies locality, while Heisenberg's uncertainty principle disintegrates our grip on predictability. Such theories challenge not only the boundaries of science but the scaffolding of cognition.\n\nLanguage, in its current syntactical form, buckles under the weight of these concepts. Terms like "wavefunction collapse" and "probabilistic reality" demand semiotic reinterpretation. As discourse enters a meta-theoretical space, words become fractals—each sentence a recursion of paradox and possibility.\n\nTyping such reflections is not simply an exercise in finger dexterity but in cognitive elasticity. One must navigate a jungle of abstractions, weaving together linguistic constructs, mathematical metaphors, and philosophical provocations. It is here that clarity must emerge from chaos—a true test not of grammar, but of thought itself.`
 ];
 
 function formatTime(seconds) {
@@ -219,8 +219,8 @@ function formatTime(seconds) {
 }
 
 const TypingTest = () => {
-  const [duration, setDuration] = useState(30 * 60); // in seconds
-  const [timeLeft, setTimeLeft] = useState(30 * 60);
+  const [duration, setDuration] = useState(30); // in seconds, default to 30 seconds
+  const [timeLeft, setTimeLeft] = useState(30); // in seconds, default to 30 seconds
   const [isRunning, setIsRunning] = useState(false);
   const [useCustom, setUseCustom] = useState(false);
   const [customText, setCustomText] = useState('');
@@ -339,14 +339,22 @@ const TypingTest = () => {
           - <b>Hard Mode:</b> Hides character highlighting and feedback as you type.
         </InfoNote>
         <ControlsRow>
-          <Select value={duration / 60} onChange={handleDurationChange} disabled={isRunning}>
-            <option value={30}>30 minutes</option>
-            <option value={60}>60 minutes</option>
+          <Select value={duration} onChange={e => { setDuration(Number(e.target.value)); setTimeLeft(Number(e.target.value)); }} disabled={isRunning}>
+            <option value={30}>30 seconds</option>
+            <option value={60}>1 minute</option>
+            <option value={120}>2 minutes</option>
+            <option value={300}>5 minutes</option>
+            <option value={600}>10 minutes</option>
+            <option value={1200}>20 minutes</option>
+            <option value={1800}>30 minutes</option>
+            <option value={2700}>45 minutes</option>
+            <option value={3600}>60 minutes</option>
           </Select>
           <Select value={selectedSampleIdx} onChange={handleSampleChange} disabled={isRunning || useCustom}>
-            {sampleTexts.map((t, i) => (
-              <option value={i} key={i}>Sample {i + 1}</option>
-            ))}
+            <option value={0}>Level 1 – Easy (Beginner Typing)</option>
+            <option value={1}>Level 2 – Medium</option>
+            <option value={2}>Level 3 – Hard</option>
+            <option value={3}>Level 4 – Extreme</option>
           </Select>
           <ToggleButton
             type="button"
@@ -422,7 +430,7 @@ const TypingTest = () => {
       </Container>
       <Footer>
         <div style={{ marginBottom: '0.5rem' }}>
-          <b>GRE ESSAY CHECK</b> &copy; {new Date().getFullYear()}<br />
+          <b>ScoreWise</b> &copy; {new Date().getFullYear()}<br />
           Built and developed by Mithil Mistry
         </div>
         <div ref={clustrRef} style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
