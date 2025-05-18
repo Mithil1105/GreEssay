@@ -42,23 +42,23 @@ const ThemeToggle = styled.button`
 `;
 
 const Navigation = ({ toggleTheme, currentTheme }) => {
-    const location = useLocation();
+  const location = useLocation();
 
-    return (
-        <Nav>
-            <NavLinks>
-                <NavButton to="/" active={location.pathname === '/' ? 1 : 0}>
-                    Typing Practice
-                </NavButton>
-                <NavButton to="/gre-writing" active={location.pathname === '/gre-writing' ? 1 : 0}>
-                    GRE Writing
-                </NavButton>
-            </NavLinks>
-            <ThemeToggle onClick={toggleTheme}>
-                {currentTheme === 'light' ? '🌙' : '☀️'}
-            </ThemeToggle>
-        </Nav>
-    );
+  return (
+    <Nav>
+      <NavLinks>
+        <NavButton to="/gre-writing" active={location.pathname === '/gre-writing' ? 1 : 0}>
+          GRE Essays
+        </NavButton>
+        <NavButton to="/typing" active={location.pathname === '/typing' ? 1 : 0}>
+          Typing Practice
+        </NavButton>
+      </NavLinks>
+      <ThemeToggle onClick={toggleTheme}>
+        {currentTheme === 'light' ? '🌙' : '☀️'}
+      </ThemeToggle>
+    </Nav>
+  );
 };
 
 export default Navigation; 

@@ -19,8 +19,8 @@ function App() {
         <div style={{ minHeight: '100vh', backgroundColor: currentTheme.body }}>
           <Navigation toggleTheme={toggleTheme} currentTheme={theme} />
           <Routes>
-            <Route path="/" element={<TypingTest />} />
-            <Route path="/gre-writing" element={<GREWriting />} />
+            <Route path="/" element={<GREWriting />} />
+            <Route path="/typing" element={<TypingTest />} />
           </Routes>
         </div>
       </Router>
