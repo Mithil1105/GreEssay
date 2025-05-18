@@ -202,7 +202,7 @@ const GREWriting = () => {
   const [stats, setStats] = useState({ wpm: 0, words: 0 });
   const timerRef = useRef();
   useEffect(() => {
-    fetch('/greIssues.json')
+    fetch('greIssues.json')
       .then(res => res.json())
       .then(data => {
         setIssuesByTheme(data);
