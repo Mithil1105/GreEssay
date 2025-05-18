@@ -232,6 +232,7 @@ const TypingTest = () => {
   const timerRef = useRef();
   const startTimeRef = useRef();
   const clustrRef = useRef(null);
+  const [flash, setFlash] = useState(false);
 
   // Get the text to type
   const promptText = useCustom ? customText : sampleTexts[selectedSampleIdx];
@@ -242,6 +243,12 @@ const TypingTest = () => {
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
       timerRef.current = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+      // Flash logic: if timer > 60s and timeLeft <= 60, start flashing
+      if (duration > 60 && timeLeft <= 60) {
+        setFlash(f => !f);
+      } else {
+        setFlash(false);
+      }
     } else if (isRunning && timeLeft === 0) {
       stopTest();
     }
@@ -380,7 +387,7 @@ const TypingTest = () => {
             placeholder="Enter your custom text here..."
           />
         )}
-        <TimeDisplay>
+        <TimeDisplay style={flash ? { background: timeLeft % 2 === 0 ? '#fff' : '#dc3545', color: timeLeft % 2 === 0 ? '#dc3545' : '#fff', transition: 'background 0.3s, color 0.3s' } : {}}>
           Time Remaining: {formatTime(timeLeft)}
         </TimeDisplay>
         <PromptBox style={{ opacity: isRunning ? 1 : 0.7, minHeight: 80 }}>

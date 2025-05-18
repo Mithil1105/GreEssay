@@ -74,6 +74,9 @@ const TimeDisplay = styled.div`
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.2rem;
+  ${({ style }) => style && css`
+    ${Object.entries(style).map(([key, value]) => css`${key}: ${value};`)}
+  `}
 `;
 const IssueCard = styled.div`
   padding: 2rem 2rem 1.5rem 2rem;
@@ -467,6 +470,7 @@ const GREWriting = () => {
   const [customInstructions, setCustomInstructions] = useState('');
   const [highFreqWords, setHighFreqWords] = useState([]);
   const [nlWords, setNLWords] = useState([]);
+  const [flash, setFlash] = useState(false);
   const timerRef = useRef();
   const clustrRef = useRef(null);
 
@@ -549,6 +553,12 @@ const GREWriting = () => {
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
       timerRef.current = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+      // Flash logic: if timer > 60s and timeLeft <= 60, start flashing
+      if (duration > 60 && timeLeft <= 60) {
+        setFlash(f => !f);
+      } else {
+        setFlash(false);
+      }
     } else if (isRunning && timeLeft === 0) {
       stopTest();
     }
@@ -596,7 +606,10 @@ const GREWriting = () => {
     setShowResult(false);
     setFinalStats(null);
   };
-  const stopTest = () => {
+  const stopTest = (manual = false) => {
+    if (manual) {
+      if (!window.confirm('Are you sure you want to submit your essay?')) return;
+    }
     setIsRunning(false);
     setShowResult(true);
     setFinalStats(stats);
@@ -781,7 +794,7 @@ const GREWriting = () => {
           To start a new paragraph in your essay, please use double enters (press Enter twice).
         </InfoNote>
 
-        <TimeDisplay>
+        <TimeDisplay style={flash ? { background: timeLeft % 2 === 0 ? '#fff' : '#dc3545', color: timeLeft % 2 === 0 ? '#dc3545' : '#fff', transition: 'background 0.3s, color 0.3s' } : {}}>
           Time Remaining: {formatTime(timeLeft)}
         </TimeDisplay>
 
@@ -815,7 +828,7 @@ const GREWriting = () => {
               Start Test
             </Button>
           ) : (
-            <Button green onClick={stopTest}>Stop Test</Button>
+            <Button green onClick={() => stopTest(true)}>Stop Test</Button>
           )}
         </div>
 
