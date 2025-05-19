@@ -438,7 +438,10 @@ const TypingTest = () => {
       <Footer>
         <div style={{ marginBottom: '0.5rem' }}>
           <b>ScoreWise</b> &copy; {new Date().getFullYear()}<br />
-          Built and developed by Mithil Mistry
+          Built and developed by Mithil Mistry & Hasti Vakani
+        </div>
+        <div style={{ marginBottom: '0.5rem' }}>
+          <b>Contact us:</b> <a href="mailto:Mithil20056mistry@gmail.com" style={{ color: '#FFDD00', textDecoration: 'underline' }}>Mithil20056mistry@gmail.com</a>
         </div>
         <div ref={clustrRef} style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
         <noscript>
