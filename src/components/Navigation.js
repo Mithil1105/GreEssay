@@ -34,19 +34,16 @@ const NavButton = styled(Link)`
   }
 `;
 
-const ThemeToggle = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 6px;
+const ThemeSelect = styled.select`
   padding: 6px 12px;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
   border: 1px solid ${({ theme }) => theme.border};
-  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   transition: ${({ theme }) => theme.transition};
+  cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.primary};
@@ -88,7 +85,17 @@ const CoffeeButton = styled.a`
   }
 `;
 
-const Navigation = ({ toggleTheme, currentTheme }) => {
+const themeDetails = {
+  'light': { icon: '🌙', label: 'Light' },
+  'dark': { icon: '☀️', label: 'Dark' },
+  'pink': { icon: '💗', label: 'Pink' },
+  'violet': { icon: '💜', label: 'Violet' },
+  'blue': { icon: '💙', label: 'Blue' },
+  'green': { icon: '💚', label: 'Green' },
+  'red': { icon: '❤️', label: 'Red' }
+};
+
+const Navigation = ({ cycleTheme, currentTheme, themeOptions, setTheme }) => {
   const location = useLocation();
 
   return (
@@ -100,12 +107,24 @@ const Navigation = ({ toggleTheme, currentTheme }) => {
         <NavButton to="/typing-practice" active={location.pathname === '/typing-practice' ? 1 : 0}>
           Typing Practice
         </NavButton>
+        <NavButton to="/quant-help" active={location.pathname === '/quant-help' ? 1 : 0}>
+          Quant Help
+        </NavButton>
+        <NavButton to="/quant-calculator" active={location.pathname === '/quant-calculator' ? 1 : 0}>
+          Calculator
+        </NavButton>
       </NavLinks>
       <RightSection>
-        <ThemeToggle onClick={toggleTheme}>
-          {currentTheme === 'light' ? '🌙' : '☀️'}
-          {currentTheme === 'light' ? 'Dark Mode' : 'Light Mode'}
-        </ThemeToggle>
+        <ThemeSelect
+          value={currentTheme}
+          onChange={(e) => setTheme(e.target.value)}
+        >
+          {themeOptions.map(theme => (
+            <option key={theme} value={theme}>
+              {themeDetails[theme].icon} {themeDetails[theme].label} Theme
+            </option>
+          ))}
+        </ThemeSelect>
         <CoffeeButton
           href="https://buymeacoffee.com/mithilmistry"
           target="_blank"
