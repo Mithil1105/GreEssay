@@ -640,7 +640,11 @@ const GREWriting = () => {
   });
   const [showResult, setShowResult] = useState(false);
   const [finalStats, setFinalStats] = useState(null);
-  const [stats, setStats] = useState({ wpm: 0, words: 0 });
+  const [stats, setStats] = useState({ wpm: 0, words: 0, maxWpm: 0 });
+  const [accuracyStats, setAccuracyStats] = useState({
+    totalKeystrokes: 0,
+    backspaceCount: 0
+  });
   const [essayEval, setEssayEval] = useState(null);
   const [isCustomTopic, setIsCustomTopic] = useState(() => {
     const saved = localStorage.getItem('isCustomTopic');
@@ -812,8 +816,39 @@ const GREWriting = () => {
     const minutes = elapsed / 60;
     const words = response.trim().split(/\s+/).filter(Boolean).length;
     const wpm = minutes > 0 ? Math.round(words / minutes) : 0;
-    setStats({ wpm, words });
+
+    setStats(prevStats => ({
+      wpm,
+      words,
+      maxWpm: Math.max(prevStats.maxWpm || 0, wpm)
+    }));
   }, [response, isRunning, timeLeft, duration]);
+
+  // Accuracy tracking
+  const handleResponseChange = (e) => {
+    if (!isRunning) return;
+
+    const newResponse = e.target.value;
+    const currentKeystrokes = newResponse.length;
+    const isBackspace = newResponse.length < response.length;
+
+    const updatedAccuracyStats = {
+      totalKeystrokes: currentKeystrokes,
+      backspaceCount: isBackspace
+        ? accuracyStats.backspaceCount + 1
+        : accuracyStats.backspaceCount
+    };
+
+    // Calculate live accuracy
+    const liveAccuracy = currentKeystrokes > 0
+      ? Math.max(0, Math.round(
+        ((currentKeystrokes - updatedAccuracyStats.backspaceCount) / currentKeystrokes) * 100
+      ))
+      : 100;
+
+    setAccuracyStats(updatedAccuracyStats);
+    setResponse(newResponse);
+  };
   // Dropdown handlers
   const handleDropdownSelect = idx => {
     setSelectedIssueIdx(idx);
@@ -843,11 +878,22 @@ const GREWriting = () => {
   const startTest = () => {
     clearLocalStorage();
     setResponse('');
-    setStats({ wpm: 0, words: 0 });
+    setStats({ wpm: 0, words: 0, maxWpm: 0 });
     setTimeLeft(duration);
     setIsRunning(true);
     setShowResult(false);
     setFinalStats(null);
+  };
+  const calculateAccuracy = () => {
+    const { totalKeystrokes, backspaceCount } = accuracyStats;
+    if (totalKeystrokes === 0) return 100;
+
+    // Calculate accuracy percentage
+    const accuracy = Math.max(0, Math.round(
+      ((totalKeystrokes - backspaceCount) / totalKeystrokes) * 100
+    ));
+
+    return accuracy;
   };
   const stopTest = (manual = false) => {
     if (manual) {
@@ -856,7 +902,16 @@ const GREWriting = () => {
     clearLocalStorage();
     setIsRunning(false);
     setShowResult(true);
-    setFinalStats(stats);
+
+    // Calculate final accuracy
+    const finalAccuracy = calculateAccuracy();
+    const finalStatsWithAccuracy = {
+      ...stats,
+      accuracy: finalAccuracy,
+      backspaceCount: accuracyStats.backspaceCount,
+      totalKeystrokes: accuracyStats.totalKeystrokes
+    };
+    setFinalStats(finalStatsWithAccuracy);
 
     const prompt = isCustomTopic ? customTopic : selectedIssue.prompt;
     const evaluation = evaluateEssay(response, prompt, highFreqWords, nlWords);
@@ -868,7 +923,7 @@ const GREWriting = () => {
       date: new Date().toLocaleString(),
       prompt,
       response,
-      stats,
+      stats: finalStatsWithAccuracy,
       evaluation,
       isCustomTopic,
       instructions: isCustomTopic ? customInstructions : selectedIssue?.instructions
@@ -886,25 +941,24 @@ const GREWriting = () => {
     setTimeLeft(mins * 60);
   };
   const handleDownload = async (result) => {
-    const topic = isCustomTopic ? customTopic : result.prompt;
-    const instructions = isCustomTopic ? customInstructions : result.instructions;
+    // If result is the stats object from current test, convert it to full result object
+    if (result.wpm && result.words) {
+      result = currentResult;
+    }
+
+    const topic = result.isCustomTopic ? result.customTopic : result.prompt;
+    const instructions = result.isCustomTopic ? result.customInstructions : result.instructions;
     const essayText = result.response;
-    const { wpm, words, timeLeft } = result || {}; // Get final stats
+    const { wpm, words, timeLeft } = result.stats || {}; // Get final stats
     const timeTaken = duration - (timeLeft || 0); // Calculate time taken
 
-    if (!topic || !essayText) {
+    // Validate essay content
+    if (!topic || !essayText || essayText.trim().length === 0) {
       alert('Cannot download empty essay or missing topic.');
       return;
     }
 
     const fileContent = `Topic:\n${topic}\n\nInstructions:\n${instructions || 'N/A'}\n\n---\n\nEssay:\n${essayText}`;
-
-    // --- DOCX GENERATION PLACEHOLDER ---
-    // To generate a .docx file, you will need a client-side library
-    // Install a library like 'docx' and 'file-saver':
-    // npm install docx file-saver
-    // or
-    // yarn add docx file-saver
 
     // Example using docx and file-saver:
     const doc = new Document({
@@ -928,7 +982,7 @@ const GREWriting = () => {
               new TextRun({ text: '\n---\n\nEssay:', bold: true }),
             ],
           }),
-          ...essayText.split(/\s{2,}/).map(para => new Paragraph({ text: para })),
+          ...essayText.split(/\n\s*\n/).map(para => new Paragraph({ text: para.trim() })),
           new Paragraph({ text: '\n---\n' }), // Separator
           new Paragraph({
             children: [
@@ -944,9 +998,6 @@ const GREWriting = () => {
 
     const blob = await Packer.toBlob(doc);
     saveAs(blob, 'GRE_Essay_Practice.docx');
-
-    console.log('Original Essay Text:', essayText);
-    console.log('Split paragraphs:', essayText.split(/\s{2,}/));
   };
 
   // Add new useEffect for saving results
@@ -1107,7 +1158,7 @@ const GREWriting = () => {
 
         <WritingArea
           value={response}
-          onChange={e => isRunning && setResponse(e.target.value)}
+          onChange={handleResponseChange}
           placeholder={isRunning ? 'Start writing your response here...' : 'Click Start Test to begin'}
           disabled={!isRunning}
           spellCheck={false}
@@ -1129,7 +1180,13 @@ const GREWriting = () => {
 
         <StatsRow>
           <Stat>WPM<br /><b>{stats.wpm}</b></Stat>
+          <Stat>Max WPM<br /><b>{stats.maxWpm || 0}</b></Stat>
           <Stat>Words<br /><b>{stats.words}</b></Stat>
+          <Stat>Accuracy<br /><b>{accuracyStats.totalKeystrokes > 0
+            ? Math.max(0, Math.round(
+              ((accuracyStats.totalKeystrokes - accuracyStats.backspaceCount) / accuracyStats.totalKeystrokes) * 100
+            ))
+            : 100}%</b></Stat>
           <Stat>Time<br /><b>{formatTime(timeLeft)}</b></Stat>
         </StatsRow>
 
@@ -1137,7 +1194,11 @@ const GREWriting = () => {
           <ResultBox>
             <h2>Test Complete!</h2>
             <p><b>WPM:</b> {finalStats.wpm}</p>
+            <p><b>Max WPM:</b> {finalStats.maxWpm || 0}</p>
             <p><b>Words Typed:</b> {finalStats.words}</p>
+            <p><b>Accuracy:</b> {finalStats.accuracy}%</p>
+            <p><b>Backspace Count:</b> {finalStats.backspaceCount}</p>
+            <p><b>Total Keystrokes:</b> {finalStats.totalKeystrokes}</p>
             {essayEval && (
               <>
                 <hr style={{ margin: '1em 0' }} />
@@ -1197,7 +1258,7 @@ const GREWriting = () => {
                 </small>
 
                 <div style={{ marginTop: '1.5rem' }}>
-                  <Button onClick={() => handleDownload(finalStats)} $green>Download Essay (.docx)</Button>
+                  <Button onClick={() => handleDownload(currentResult)} $green>Download Essay (.docx)</Button>
                 </div>
               </>
             )}
@@ -1289,6 +1350,18 @@ const GREWriting = () => {
                           <li>
                             <span>WPM:</span>
                             <span>{selectedResult.stats.wpm}</span>
+                          </li>
+                          <li>
+                            <span>Max WPM:</span>
+                            <span>{selectedResult.stats.maxWpm || 'N/A'}</span>
+                          </li>
+                          <li>
+                            <span>Accuracy:</span>
+                            <span>{selectedResult.stats.accuracy || 'N/A'}%</span>
+                          </li>
+                          <li>
+                            <span>Backspace Count:</span>
+                            <span>{selectedResult.stats.backspaceCount || 'N/A'}</span>
                           </li>
                           <li>
                             <span>Vocabulary Diversity:</span>
