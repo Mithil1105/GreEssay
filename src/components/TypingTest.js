@@ -206,7 +206,6 @@ const Footer = styled.footer`
 `;
 
 const sampleTexts = [
-  // Level 1: Beginner
   `Every day, I wake up early in the morning. The sun is rising, and the birds are singing outside my window. I get out of bed, brush my teeth, and wash my face. Then, I eat breakfast. I like toast and milk. Sometimes I have eggs too.
 
 After breakfast, I go to school. I carry my bag and books. The school is not far from my house, so I walk there with my friends. We talk and laugh on the way. School starts at 9 o'clock. We study different subjects like math, English, and science. I try to listen to the teacher and do my homework on time.
@@ -216,7 +215,6 @@ At noon, we have lunch. I eat the food my mom packed for me. After lunch, we pla
 When I get home, I change my clothes and rest for a bit. Later, I do my homework. If I finish early, I play games or watch TV. In the evening, I help my mom set the table. We eat dinner together. After dinner, I brush my teeth and go to bed.
 
 That is a simple day in my life. It is not very exciting, but I like it. Every day is almost the same, but I try to be happy and do my best.`,
-  // Level 2: Easy
   `My favorite hobby is drawing. I love to draw pictures of animals, flowers, and people. I started drawing when I was very young. I used to draw with crayons, but now I use pencils and colors. Drawing makes me happy and calm.
 
 When I draw, I feel peaceful. I forget about everything else and just think about the picture I am making. I can spend hours drawing without getting bored. Sometimes I draw from my imagination, and other times I draw things I see around me.
@@ -226,7 +224,6 @@ I also like to show my drawings to my family and friends. They say nice things a
 Drawing helps me express my thoughts. If I am feeling sad, I draw. If I am feeling excited, I draw. It is like my way of talking without using words. That is why I love it so much.
 
 I hope I can learn more about drawing as I grow. Maybe one day, I will become a great artist. But even if I don't, I will still keep drawing because it brings me joy.`,
-  // Level 3: Lower-Intermediate
   `One of the most memorable events from my childhood was the day I learned how to ride a bicycle. I was about seven years old at the time. My parents had bought me a shiny red bicycle with black handles. I was excited to learn, but I was also a little scared.
 
 At first, my dad held the back of the bike while I tried to pedal. I kept wobbling and almost fell many times. But he kept telling me not to give up. My mom was watching and cheering me on from the side.
@@ -236,7 +233,6 @@ After several tries, my dad suddenly let go without telling me. I didn't notice 
 Everyone clapped and shouted with joy. I felt so proud and free. That was the moment I understood what it felt like to succeed after trying again and again. I spent the rest of the day riding around the neighborhood.
 
 Even now, whenever I see kids learning to ride a bike, I remember that special day. It taught me that with patience and practice, I can achieve anything.`,
-  // Level 4: Intermediate
   `Physical activity plays an essential role in maintaining good health. Whether it's walking, running, cycling, or playing a sport, moving your body helps you feel better physically and mentally. People of all ages can benefit from being active, and even small efforts can lead to big changes over time.
 
 One of the most important benefits of physical activity is that it improves your physical health. Regular movement helps strengthen the heart and lungs, reduces the risk of diseases like diabetes and high blood pressure, and helps you maintain a healthy weight. It also strengthens muscles and bones, which is especially important as people grow older.
@@ -248,7 +244,6 @@ Another key benefit is increased energy. People who exercise regularly often fin
 It's important to remember that you don't need to become a professional athlete to enjoy these benefits. Simple activities like walking for 30 minutes a day or dancing to your favorite music can be enough. The goal is to move regularly and stay consistent.
 
 In conclusion, regular physical activity is a powerful way to take care of both your body and your mind. No matter your age or skill level, being active can improve your life in many ways.`,
-  // Level 5: Upper-Intermediate
   `One place I've always dreamed of visiting is Kyoto, Japan. Known for its rich culture, beautiful temples, and peaceful gardens, Kyoto offers a unique blend of tradition and modernity. It's a city that tells the story of Japan's past while still embracing the present.
 
 The first reason I want to visit Kyoto is its deep connection to history. As Japan's former capital, Kyoto is home to more than a thousand temples and shrines. Some of the most famous include the golden Kinkaku-ji and the peaceful Ryoan-ji with its stone garden. Walking through these historic places feels like stepping back in time.
@@ -260,7 +255,6 @@ Kyoto is also known for its unique culture. Traditional tea ceremonies, geisha p
 Finally, I'm drawn to the calm atmosphere of Kyoto. Unlike Tokyo, which is fast-paced and busy, Kyoto is known for being quiet and reflective. It seems like the perfect place to pause, learn, and appreciate life more deeply.
 
 Visiting Kyoto would be more than just a vacation—it would be a meaningful experience that combines culture, beauty, and inner peace.`,
-  // Level 6: Advanced
   `In a world filled with distractions and tight schedules, time management is one of the most valuable skills a student can develop. Effective time management allows students to balance academics, social life, and personal goals. Without it, even the most talented students may struggle to meet deadlines or maintain mental well-being.
 
 Time management starts with understanding priorities. Not all tasks are equally important, and successful students learn to identify which ones deserve more attention. This means planning ahead, breaking down assignments into smaller tasks, and avoiding the habit of last-minute work. Tools like calendars, planners, and digital apps can help structure a student's day and make sure nothing is forgotten.
@@ -272,7 +266,6 @@ Good time management also helps students build life skills. It teaches disciplin
 However, time management is not about filling every minute of the day. It's about creating space—space to study, to rest, and to grow. It allows students to avoid burnout by making time for hobbies, friendships, and self-care.
 
 In conclusion, time management is more than a study technique—it is a foundation for success. By learning how to manage their time, students gain control over their lives and prepare themselves for the challenges of the future.`,
-  // Level 7: Academic
   `The impact of technology on modern communication has been both profound and transformative. Over the past few decades, the way humans exchange ideas has shifted dramatically from face-to-face conversations and written letters to instant digital interactions across vast distances. While this shift has brought numerous advantages, it also presents several challenges that deserve consideration.
 
 One of the most significant benefits of technological advancement is the speed and convenience it offers. With tools such as email, instant messaging, and video conferencing, individuals can communicate with others anywhere in the world almost instantaneously. This has been particularly beneficial in professional settings, where businesses can collaborate globally without the need for travel. It has also strengthened social connections by enabling people to stay in touch with friends and family regardless of geographical barriers.
@@ -284,7 +277,6 @@ However, the rise of digital communication also comes with drawbacks. One major 
 Another challenge is information overload. With constant notifications and the expectation of instant responses, individuals often feel overwhelmed or distracted. This can reduce the quality of communication and lead to stress or burnout. Furthermore, issues related to privacy and data security have become increasingly relevant, as personal information shared online can be misused or compromised.
 
 In conclusion, while technology has enhanced the efficiency and reach of communication, it has also introduced new complexities. Striking a balance between digital convenience and human connection is essential to ensuring that communication remains meaningful and effective in the modern world.`,
-  // Level 8: Professional
   `Education is universally recognized as a cornerstone of a well-functioning society. It is the means by which knowledge, values, and skills are transmitted from one generation to the next, serving as both a personal and collective tool for development. Beyond individual achievement, the role of education in shaping societal structure, culture, and progress cannot be overstated.
 
 Firstly, education fosters critical thinking, creativity, and informed decision-making. These qualities are essential in a democratic society, where citizens must engage in policy debates, vote responsibly, and contribute to civic life. Educated individuals are more likely to participate actively in their communities and advocate for social justice and equality.
@@ -298,7 +290,6 @@ Importantly, education also plays a role in promoting equity. Although access re
 Despite its benefits, education systems must continually evolve to meet changing societal needs. This includes updating curricula to reflect technological advancements, addressing mental health challenges among students, and ensuring equitable access to quality education across all communities.
 
 In summary, education is not merely a personal achievement; it is a public good that underpins the values, structure, and progress of society. Its impact stretches far beyond the classroom, influencing the kind of world we live in and the future we aspire to build.`,
-  // Level 9: Literary
   `Leadership is not a one-size-fits-all concept. Throughout history and across cultures, various leadership styles have emerged, each shaped by personality, context, and objectives. Two prominent styles—authoritative leadership and democratic leadership—offer distinct advantages and challenges. While both aim to guide teams toward success, their methods and impacts differ significantly.
 
 Authoritative leaders are known for their decisiveness and clarity. They set a clear vision and expect their teams to follow with discipline and precision. Often seen in high-stakes environments such as the military or emergency response, this style is effective when quick decisions and unified action are needed. These leaders command respect, and their confidence can inspire trust, particularly during crises. However, the downside lies in its rigidity. By concentrating power at the top, authoritative leadership may stifle creativity, discourage collaboration, and alienate team members who value input and dialogue.
@@ -308,7 +299,6 @@ On the other hand, democratic leaders encourage participation, valuing the opini
 What unites both styles is their focus on achieving goals and guiding people, but the path they take diverges. The authoritative leader may resemble a captain steering a ship through stormy waters with firm hands, while the democratic leader is more like a conductor, ensuring each instrument contributes harmoniously to the orchestra's success.
 
 Ultimately, the most effective leaders recognize when to apply each style. Great leadership often lies not in strict adherence to one method, but in the ability to adapt—balancing control with consultation, authority with empathy.`,
-  // Level 10: Expert
   `Artificial Intelligence (AI) is transforming every sector it touches—from healthcare and finance to education and defense. While the potential benefits are immense, including increased efficiency, accuracy, and innovation, the ethical implications of AI warrant serious attention. As machines begin to mimic human reasoning and autonomy, society must confront complex questions about accountability, privacy, and moral responsibility.
 
 A primary ethical concern is bias in AI systems. Since algorithms learn from data created by humans, they often reflect existing prejudices. If not properly addressed, this can lead to discriminatory practices, such as biased hiring systems or unjust policing patterns. Ensuring fairness in AI requires transparency in algorithm design, regular audits, and diverse datasets.
@@ -559,12 +549,12 @@ const TypingTest = () => {
             <option value={1}>Level 2 – Easy (My Favorite Hobby)</option>
             <option value={2}>Level 3 – Lower-Intermediate (Learning to Ride a Bike)</option>
             <option value={3}>Level 4 – Intermediate (Benefits of Physical Activity)</option>
-            <option value={4}>Level 5 – Upper-Intermediate (One Place I've Always Dreamed of Visiting)</option>
-            <option value={5}>Level 6 – Advanced (In a World Filled with Distractions)</option>
-            <option value={6}>Level 7 – Academic (The Impact of Technology on Modern Communication)</option>
-            <option value={7}>Level 8 – Professional (The Role of Education in Shaping Society)</option>
-            <option value={8}>Level 9 – Literary (Leadership Styles and Their Impact)</option>
-            <option value={9}>Level 10 – Expert (The Ethical Implications of Artificial Intelligence)</option>
+            <option value={4}>Level 5 – Upper-Intermediate (Kyoto, Japan)</option>
+            <option value={5}>Level 6 – Advanced (Time Management)</option>
+            <option value={6}>Level 7 – Upper-Intermediate (The Impact of Technology)</option>
+            <option value={7}>Level 8 – Advanced (Education)</option>
+            <option value={8}>Level 9 – Upper-Intermediate (Leadership)</option>
+            <option value={9}>Level 10 – Advanced (Artificial Intelligence)</option>
           </Select>
           <ToggleButton
             type="button"

@@ -3,7 +3,7 @@ import styled, { css, keyframes } from 'styled-components';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 
-// Default theme fallback
+// Add this near the top of the file, after the imports
 const defaultTheme = {
   border: '#dee2e6',
   surface: '#ffffff',
@@ -11,6 +11,7 @@ const defaultTheme = {
   primary: '#007bff',
   secondary: '#6c757d',
   background: '#f8f9fa',
+  body: '#ffffff',
   shadow: '0 2px 4px rgba(0,0,0,0.1)',
   transition: 'all 0.3s ease'
 };
@@ -19,6 +20,7 @@ const Container = styled.div`
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
+  background-color: ${({ theme = defaultTheme }) => theme.body};
   @media (max-width: 600px) {
     padding: 0 0.5rem;
     margin: 1rem 0;
@@ -28,6 +30,7 @@ const Title = styled.h1`
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  color: ${({ theme = defaultTheme }) => theme.text};
   @media (max-width: 600px) {
     font-size: 1.4rem;
     margin-bottom: 1rem;
@@ -39,6 +42,7 @@ const ControlsRow = styled.div`
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   align-items: flex-end;
+  background-color: ${({ theme = defaultTheme }) => theme.body};
   @media (max-width: 600px) {
     flex-direction: column;
     gap: 0.5rem;
@@ -721,80 +725,136 @@ const GREWriting = () => {
   };
 
   useEffect(() => {
-    console.log('Fetching greIssues.json...');
-    fetch(`${process.env.PUBLIC_URL}/greIssues.json`)
-      .then(res => {
-        if (!res.ok) {
-          console.error('Error fetching greIssues.json:', res.status, res.statusText);
-          return {};
-        }
-        return res.json();
-      })
-      .then(data => {
-        console.log('greIssues.json fetched successfully:', data);
-        setIssuesByTheme(data);
-        const flat = [];
-        Object.entries(data).forEach(([theme, arr]) => {
-          arr.forEach(issue => flat.push({ ...issue, theme }));
-        });
-        console.log('Flattened issues:', flat);
-        setAllIssues(flat);
-        console.log('issuesByTheme state after update:', issuesByTheme);
-        console.log('allIssues state after update:', allIssues);
+    // Debugging function to log fetch errors
+    const logFetchError = (source, error) => {
+      console.error(`Fetch Error (${source}):`, error);
 
-      })
-      .catch(err => {
-        console.error('Error fetching greIssues.json:', err);
+      // More detailed error logging
+      if (error instanceof TypeError) {
+        console.error('Network Error Details:', {
+          message: error.message,
+          name: error.name,
+          stack: error.stack
+        });
+      } else if (error instanceof Error) {
+        console.error('Error Details:', {
+          message: error.message,
+          name: error.name,
+          stack: error.stack
+        });
+      }
+    };
+
+    // Fetch issues with enhanced error handling
+    const fetchIssues = async () => {
+      try {
+        const response = await fetch(`${process.env.PUBLIC_URL}/greIssues.json`);
+
+        // Check for network errors
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Validate data structure
+        if (!data || typeof data !== 'object') {
+          console.error('Invalid data structure:', data);
+          setIssuesByTheme({});
+          setAllIssues([]);
+          return;
+        }
+
+        // Ensure data is processed even if some themes are empty
+        const processedData = Object.fromEntries(
+          Object.entries(data).filter(([theme, issues]) => Array.isArray(issues) && issues.length > 0)
+        );
+
+        console.log('Processed Issues by Theme:', processedData);
+        setIssuesByTheme(processedData);
+
+        // Flatten issues with theme information
+        const flattenedIssues = Object.entries(processedData).flatMap(([theme, themeIssues]) =>
+          themeIssues.map(issue => ({ ...issue, theme }))
+        );
+
+        console.log('Flattened Issues:', flattenedIssues);
+        setAllIssues(flattenedIssues);
+      } catch (error) {
+        logFetchError('greIssues.json', error);
+
+        // Provide a fallback or default state
         setIssuesByTheme({});
         setAllIssues([]);
-      });
 
-    console.log('Fetching wordlist.json...');
-    fetch(`${process.env.PUBLIC_URL}/wordlist.json`)
-      .then(res => {
-        if (!res.ok) {
-          console.error('Error fetching wordlist.json:', res.status, res.statusText);
-          return {};
+        // Optional: Show user-friendly error message
+        alert('Failed to load essay topics. Please check your connection and try again.');
+      }
+    };
+
+    // Fetch wordlist with enhanced error handling
+    const fetchWordlist = async () => {
+      try {
+        const response = await fetch(`${process.env.PUBLIC_URL}/wordlist.json`);
+
+        // Check for network errors
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`);
         }
-        return res.json();
-      })
-      .then(data => {
-        console.log('wordlist.json fetched successfully:', data);
+
+        const data = await response.json();
+
+        // Validate data structure
+        if (!data || typeof data !== 'object') {
+          console.error('Invalid wordlist structure:', data);
+          setHighFreqWords([]);
+          setNLWords([]);
+          return;
+        }
+
+        console.log('Wordlist data:', data);
         setHighFreqWords(data.HF || []);
         setNLWords(data.NL || []);
-        console.log('highFreqWords state after update:', highFreqWords);
-        console.log('nlWords state after update:', nlWords);
+      } catch (error) {
+        logFetchError('wordlist.json', error);
 
-      })
-      .catch(err => {
-        console.error('Error loading wordlist:', err);
+        // Provide a fallback or default state
         setHighFreqWords([]);
         setNLWords([]);
-      });
 
-    // Dynamically inject ClustrMaps script
-    if (clustrRef.current) {
-      // Remove any previous script
-      const prev = document.getElementById('clustrmaps');
-      if (prev) prev.remove();
-      const script = document.createElement('script');
-      script.id = 'clustrmaps';
-      script.type = 'text/javascript';
-      script.src = '//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM&cl=ffffff&w=a';
-      clustrRef.current.appendChild(script);
-    }
+        // Optional: Show user-friendly error message
+        alert('Failed to load word lists. Some features may be limited.');
+      }
+    };
+
+    // Fetch both resources
+    fetchIssues();
+    fetchWordlist();
   }, []);
-  // Unique themes
-  const allThemes = Object.keys(issuesByTheme);
-  // Filtered issues for dropdown (only from selected themes)
-  const filteredIssues = allIssues.filter(
+  // Modify theme selection to ensure proper filtering
+  const allThemes = Object.keys(issuesByTheme || {});
+  const filteredIssues = (allIssues || []).filter(
     issue =>
       (selectedThemes.length === 0 || selectedThemes.includes(issue.theme)) &&
-      (issue.theme.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        issue.prompt.toLowerCase().includes(searchQuery.toLowerCase()))
+      (searchQuery === '' ||
+        (issue.theme || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (issue.prompt || '').toLowerCase().includes(searchQuery.toLowerCase()))
   );
-  // Current selected issue
-  const selectedIssue = filteredIssues[selectedIssueIdx] || filteredIssues[0];
+
+  // Add console logs for debugging
+  console.log('All Themes:', allThemes);
+  console.log('Selected Themes:', selectedThemes);
+  console.log('Filtered Issues:', filteredIssues);
+  console.log('Search Query:', searchQuery);
+
+  // Fallback for selected issue
+  const selectedIssue = filteredIssues.length > 0
+    ? filteredIssues[Math.min(selectedIssueIdx, filteredIssues.length - 1)]
+    : {
+      theme: 'No Topics Available',
+      prompt: 'Please check your internet connection or reload the page.',
+      instructions: 'Unable to load essay topics.'
+    };
   // Timer and stats logic
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -1080,18 +1140,30 @@ const GREWriting = () => {
         ) : (
           <>
             <ThemeCheckboxGroup>
-              {allThemes.map(theme => (
+              {allThemes.sort().map(theme => (
                 <ThemeCheckboxLabel key={theme}>
                   <Checkbox
                     type="checkbox"
                     checked={selectedThemes.includes(theme)}
-                    onChange={() => handleThemeCheck(theme)}
+                    onChange={() => {
+                      setSelectedThemes(prev =>
+                        prev.includes(theme)
+                          ? prev.filter(t => t !== theme)
+                          : [...prev, theme]
+                      );
+                      setSelectedIssueIdx(0); // Reset issue selection
+                    }}
                     disabled={isRunning}
                   />
-                  {theme}
+                  {theme} ({issuesByTheme[theme].length} issues)
                 </ThemeCheckboxLabel>
               ))}
             </ThemeCheckboxGroup>
+            {selectedThemes.length > 0 && (
+              <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666' }}>
+                Selected Themes: {selectedThemes.join(', ')}
+              </div>
+            )}
             <div style={{ marginBottom: '1rem' }}>
               <Button type="button" $red onClick={handleClearThemes} disabled={isRunning}>Clear Themes</Button>
               <Button type="button" onClick={handleRandomise} disabled={isRunning}>Randomise</Button>
