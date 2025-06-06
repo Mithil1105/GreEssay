@@ -113,6 +113,9 @@ const Navigation = ({ cycleTheme, currentTheme, themeOptions, setTheme }) => {
         <NavButton to="/quant-calculator" active={location.pathname === '/quant-calculator' ? 1 : 0}>
           Calculator
         </NavButton>
+        <NavButton to="/verbal-help" active={location.pathname === '/verbal-help' ? 1 : 0}>
+          Verbal Help
+        </NavButton>
       </NavLinks>
       <RightSection>
         <ThemeSelect

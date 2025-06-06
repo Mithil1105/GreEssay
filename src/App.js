@@ -17,6 +17,7 @@ import GREWriting from './components/GREWriting';
 import Navigation from './components/Navigation';
 import QuantHelp from './QuantHelp';
 import QuantCalculator from './QuantCalculator';
+import VerbalHelp from './components/VerbalHelp';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -107,20 +108,23 @@ function App() {
       <ThemeProvider theme={currentTheme}>
         <GlobalStyles />
         <Router>
-          <div style={{ minHeight: '100vh', backgroundColor: currentTheme.body }}>
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: currentTheme.body }}>
             <Navigation
               toggleTheme={cycleTheme}
               currentTheme={theme}
               themeOptions={themeOptions}
               setTheme={setTheme}
             />
-            <Routes>
-              <Route path="/" element={<GREWriting />} />
-              <Route path="/gre-writing" element={<GREWriting />} />
-              <Route path="/typing-practice" element={<TypingTest />} />
-              <Route path="/quant-help" element={<QuantHelp />} />
-              <Route path="/quant-calculator" element={<QuantCalculator />} />
-            </Routes>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <Routes>
+                <Route path="/" element={<GREWriting />} />
+                <Route path="/gre-writing" element={<GREWriting />} />
+                <Route path="/typing-practice" element={<TypingTest />} />
+                <Route path="/quant-help" element={<QuantHelp />} />
+                <Route path="/quant-calculator" element={<QuantCalculator />} />
+                <Route path="/verbal-help" element={<VerbalHelp />} />
+              </Routes>
+            </div>
           </div>
         </Router>
       </ThemeProvider>

@@ -51,7 +51,7 @@ const Select = styled.select`
 const Button = styled.button`
   padding: 0.5rem 1.5rem;
   border-radius: 6px;
-  background-color: ${({ theme, green }) => green ? '#28a745' : theme.primary};
+  background-color: ${({ theme, $green }) => $green ? '#28a745' : theme.primary};
   color: #fff;
   font-size: 1rem;
   font-weight: 500;
@@ -60,7 +60,7 @@ const Button = styled.button`
   margin-bottom: 0.5rem;
   transition: background 0.2s;
   &:hover {
-    background-color: ${({ theme, green }) => green ? '#218838' : theme.secondary};
+    background-color: ${({ theme, $green }) => $green ? '#218838' : theme.secondary};
   }
   &:disabled {
     opacity: 0.6;
@@ -69,11 +69,11 @@ const Button = styled.button`
 `;
 
 const ToggleButton = styled(Button)`
-  background-color: ${({ active }) => active ? '#28a745' : '#f8f9fa'};
-  color: ${({ active }) => active ? '#fff' : '#333'};
+  background-color: ${({ $active }) => $active ? '#28a745' : '#f8f9fa'};
+  color: ${({ $active }) => $active ? '#fff' : '#333'};
   border: 1px solid #28a745;
   &:hover {
-    background-color: ${({ active }) => active ? '#218838' : '#e2e6ea'};
+    background-color: ${({ $active }) => $active ? '#218838' : '#e2e6ea'};
     color: #333;
   }
 `;
@@ -100,14 +100,14 @@ const PromptBox = styled.div`
 `;
 
 const CharSpan = styled.span`
-  ${({ correct, incorrect, current, hardMode }) =>
-    !hardMode &&
+  ${({ $correct, $incorrect, $current, $hardMode }) =>
+    !$hardMode &&
     css`
-      background: ${correct ? '#d4edda' : incorrect ? '#f8d7da' : 'none'};
-      color: ${incorrect ? '#dc3545' : correct ? '#28a745' : 'inherit'};
-      border-bottom: ${current ? '2px solid #007bff' : 'none'};
-      font-weight: ${current ? 700 : 400};
-      text-decoration: ${current ? 'underline' : 'none'};
+      background: ${$correct ? '#d4edda' : $incorrect ? '#f8d7da' : 'none'};
+      color: ${$incorrect ? '#dc3545' : $correct ? '#28a745' : 'inherit'};
+      border-bottom: ${$current ? '2px solid #007bff' : 'none'};
+      font-weight: ${$current ? 700 : 400};
+      text-decoration: ${$current ? 'underline' : 'none'};
       transition: background 0.1s;
     `}
 `;
@@ -505,10 +505,10 @@ const TypingTest = () => {
           return (
             <CharSpan
               key={absoluteIdx}
-              correct={correct}
-              incorrect={incorrect}
-              current={current}
-              hardMode={hardMode}
+              $correct={correct}
+              $incorrect={incorrect}
+              $current={current}
+              $hardMode={hardMode}
             >
               {char}
             </CharSpan>
@@ -565,12 +565,10 @@ const TypingTest = () => {
             {useCustom ? 'Use Sample Text' : 'Use Custom Text'}
           </ToggleButton>
           <ToggleButton
-            type="button"
-            active={hardMode}
-            onClick={() => setHardMode(h => !h)}
-            disabled={isRunning}
+            onClick={() => setHardMode(!hardMode)}
+            $active={hardMode}
           >
-            {hardMode ? 'Hard Mode On' : 'Hard Mode Off'}
+            Hard Mode
           </ToggleButton>
         </ControlsRow>
         {useCustom && !isRunning && (
@@ -605,9 +603,9 @@ const TypingTest = () => {
         />
         <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
           {!isRunning ? (
-            <Button green onClick={startTest}>Start Test</Button>
+            <Button $green onClick={startTest}>Start Test</Button>
           ) : (
-            <Button green onClick={stopTest}>Stop Test</Button>
+            <Button $green onClick={stopTest}>Stop Test</Button>
           )}
         </div>
         <StatsRow>
