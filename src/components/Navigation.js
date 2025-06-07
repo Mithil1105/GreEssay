@@ -9,17 +9,44 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 0.3rem 1rem;
+    margin-top: 0 !important;
+  }
+  @media (max-width: 480px) {
+    padding: 0.2rem 0.5rem;
+    margin-top: 0 !important;
+  }
+  overflow-x: hidden;
 `;
 
 const RightSection = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+  }
+  @media (max-width: 480px) {
+  }
 `;
 
 const NavLinks = styled.div`
   display: flex;
   gap: 1rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 0.2rem;
+  }
+  @media (max-width: 480px) {
+    margin-bottom: 0.1rem;
+  }
 `;
 
 const NavButton = styled(Link)`
@@ -31,6 +58,22 @@ const NavButton = styled(Link)`
 
   &:hover {
     background-color: ${({ theme, active }) => active ? theme.primary : theme.background};
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.1rem;
+    flex-shrink: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+    min-width: 0;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 `;
 
@@ -51,13 +94,29 @@ const ThemeSelect = styled.select`
   }
 
   @media (max-width: 600px) {
-    padding: 4px 8px;
-    font-size: 12px;
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-bottom: 0.1rem;
+    flex-shrink: 0;
+    max-width: 100%;
+    min-width: 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  @media (max-width: 480px) {
+    margin-bottom: 0.1rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 `;
 
 const CoffeeButton = styled.a`
-  display: inline-flex;
+  display: flex;
   align-items: center;
   padding: 6px 12px;
   background-color: #FFDD00;
@@ -77,11 +136,32 @@ const CoffeeButton = styled.a`
 
   svg {
     margin-right: 6px;
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 
   @media (max-width: 600px) {
-    padding: 4px 8px;
-    font-size: 12px;
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 0.1rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    max-width: 100%;
+    min-width: 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  @media (max-width: 480px) {
+    margin-bottom: 0.2rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 `;
 

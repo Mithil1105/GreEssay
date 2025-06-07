@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+import { defaultTheme } from '../themes';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(24px); }
@@ -15,6 +16,10 @@ const Container = styled.div`
   align-items: center;
   @media (max-width: 1400px) {
     max-width: 98vw;
+  }
+  @media (max-width: 600px) {
+    margin-top: 1rem;
+    padding: 0 0.5rem;
   }
 `;
 
@@ -33,22 +38,31 @@ const ListDropdownContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
 `;
 
 const ListSelect = styled.select`
   padding: 0.7rem 1.2rem;
   border-radius: 8px;
-  border: 1.5px solid #c4b5fd;
-  background: #ede9fe;
-  color: #3a2476;
+  border: 1.5px solid ${({ theme }) => theme.border};
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   font-size: 1.08rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(124,58,237,0.04);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   transition: background 0.2s, border 0.2s;
   &:hover {
-    background: #d1c4e9;
-    border-color: #a78bfa;
+    background: ${({ theme }) => theme.secondary};
+    border-color: ${({ theme }) => theme.primary};
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
   }
 `;
 
@@ -58,23 +72,32 @@ const DropdownContainer = styled.div`
   align-items: flex-start;
   margin-bottom: 1.5rem;
   position: relative;
+  @media (max-width: 600px) {
+    width: 100%;
+    align-items: stretch;
+  }
 `;
 
 const DropdownButton = styled.button`
-  background: #ede9fe;
-  color: #3a2476;
-  border: 1.5px solid #c4b5fd;
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  border: 1.5px solid ${({ theme }) => theme.border};
   border-radius: 8px;
   padding: 0.7rem 1.3rem;
   font-size: 1.08rem;
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 0.5rem;
-  box-shadow: 0 1px 4px rgba(124,58,237,0.04);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   transition: background 0.2s, border 0.2s;
   &:hover {
-    background: #d1c4e9;
-    border-color: #a78bfa;
+    background: ${({ theme }) => theme.secondary};
+    border-color: ${({ theme }) => theme.primary};
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
   }
 `;
 
@@ -82,20 +105,26 @@ const DropdownMenu = styled.div`
   position: absolute;
   top: 110%;
   left: 0;
-  background: #fff;
-  border: 1.5px solid #c4b5fd;
+  background: ${({ theme }) => theme.surface};
+  border: 1.5px solid ${({ theme }) => theme.border};
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(60,60,120,0.10);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   padding: 1rem 1.2rem;
   z-index: 10;
   min-width: 220px;
+  @media (max-width: 600px) {
+    min-width: unset;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 `;
 
 const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   font-size: 1.08rem;
-  color: #3a2476;
+  color: ${({ theme }) => theme.text};
   font-weight: 500;
   margin-bottom: 0.7rem;
   cursor: pointer;
@@ -104,7 +133,7 @@ const CheckboxLabel = styled.label`
 
 const Checkbox = styled.input`
   margin-right: 0.7em;
-  accent-color: #7c3aed;
+  accent-color: ${({ theme }) => theme.primary};
   width: 1.1em;
   height: 1.1em;
 `;
@@ -128,9 +157,9 @@ const MainFlex = styled.div`
 const Sidebar = styled.div`
   min-width: 320px;
   max-width: 340px;
-  background: #f3f0ff;
+  background: ${({ theme }) => theme.background};
   border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(60,60,120,0.06);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   padding: 1.5rem 1.1rem 1.5rem 1.1rem;
   height: 700px;
   overflow-y: auto;
@@ -151,6 +180,9 @@ const Sidebar = styled.div`
     padding: 0.7rem 0.2rem;
     margin-bottom: 1rem;
     font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+    order: 2;
   }
 `;
 
@@ -163,39 +195,44 @@ const SidebarWord = styled.div`
   border-radius: 7px;
   font-size: 1.18rem;
   font-weight: 600;
-  color: #3a2476;
-  background: ${({ $active, $review }) =>
-        $review ? '#ffeaea' : $active ? '#ede9fe' : 'transparent'};
-  border: ${({ $active, $review }) =>
-        $review ? '1.5px solid #e57373' : $active ? '1.5px solid #a78bfa' : '1.5px solid transparent'};
+  color: ${({ theme }) => theme.text};
+  background: ${({ $active, $review, theme }) =>
+        $review ? theme.error + '1A' : $active ? theme.background : 'transparent'};
+  border: 1.5px solid ${({ $active, $review, theme }) =>
+        $review ? theme.error : $active ? theme.primary : 'transparent'};
   cursor: pointer;
   transition: background 0.18s, border 0.18s;
   position: relative;
   line-height: 1.6;
   &:hover {
-    background: ${({ $review }) => ($review ? '#ffd6d6' : '#ede9fe')};
+    background: ${({ $review, theme }) => ($review ? theme.error + '33' : theme.background)};
+  }
+  @media (max-width: 900px) {
+    padding: 0.5rem 0.7rem;
+    margin: 0.2rem;
+    font-size: 0.95rem;
   }
 `;
 
 const SidebarIcon = styled.span`
   margin-left: 0.5em;
   font-size: 1.22em;
-  ${({ $review }) =>
+  ${({ $review, theme }) =>
         $review &&
         css`
-      color: #e53935;
+      color: ${theme.error};
     `}
-  ${({ $completed, $review }) =>
+  ${({ $completed, $review, theme }) =>
         $completed && !$review &&
         css`
-      color: #28a745;
+      color: ${theme.success};
     `}
 `;
 
 const Card = styled.div`
-  background: ${({ review }) => (review ? '#ffeaea' : '#f7f5ff')};
+  background: ${({ $review, theme }) => ($review ? theme.error + '1A' : theme.surface)};
   border-radius: 32px;
-  box-shadow: 0 8px 36px rgba(60, 60, 120, 0.13), 0 2px 8px rgba(60,60,120,0.09);
+  box-shadow: ${({ theme }) => theme.shadow};
   padding: 3.5rem 3.5rem 2.7rem 3.5rem;
   margin: 2.2rem 0;
   display: flex;
@@ -206,7 +243,7 @@ const Card = styled.div`
   max-width: 950px;
   width: 100%;
   animation: ${fadeIn} 0.5s cubic-bezier(.4,1.2,.6,1) 1;
-  border: ${({ review }) => (review ? '2.5px solid #e57373' : 'none')};
+  border: ${({ $review, theme }) => ($review ? `2.5px solid ${theme.error}` : 'none')};
   font-size: 1.22rem;
   line-height: 1.8;
   @media (max-width: 1200px) {
@@ -219,6 +256,9 @@ const Card = styled.div`
     width: 100%;
     margin: 0.5rem 0 0 0;
     font-size: 1rem;
+    padding: 1.5rem 1rem 1rem 1rem;
+    min-height: unset;
+    order: 1;
   }
   @media (max-width: 600px) {
     padding: 1.3rem 0.7rem 1.3rem 0.7rem;
@@ -230,7 +270,7 @@ const Card = styled.div`
 const Word = styled.h2`
   font-size: 2.8rem;
   font-weight: 900;
-  color: #3a2476;
+  color: ${({ theme }) => theme.text};
   margin-bottom: 1.2rem;
   text-align: center;
   letter-spacing: 0.01em;
@@ -238,25 +278,25 @@ const Word = styled.h2`
 `;
 
 const MeaningSection = styled.div`
-  background: #ede9fe;
-  border-left: 7px solid #7c3aed;
+  background: ${({ theme }) => theme.background};
+  border-left: 7px solid ${({ theme }) => theme.primary};
   border-radius: 10px;
   padding: 1.2rem 1.3rem 1.2rem 1.7rem;
   margin-bottom: 2.1rem;
-  box-shadow: 0 1px 4px rgba(124,58,237,0.04);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 `;
 
 const MeaningLabel = styled.div`
   font-size: 1.13rem;
   font-weight: 700;
-  color: #7c3aed;
+  color: ${({ theme }) => theme.primary};
   margin-bottom: 0.3rem;
   letter-spacing: 0.01em;
 `;
 
 const MeaningText = styled.div`
   font-size: 1.45rem;
-  color: #18122b;
+  color: ${({ theme }) => theme.text};
   font-weight: 500;
   line-height: 1.7;
   font-family: 'Fira Sans', 'Segoe UI', Arial, sans-serif;
@@ -264,16 +304,16 @@ const MeaningText = styled.div`
 
 const Divider = styled.hr`
   border: none;
-  border-top: 2.5px solid #e3dff7;
+  border-top: 2.5px solid ${({ theme }) => theme.border};
   margin: 1.7rem 0 1.3rem 0;
 `;
 
 const Example = styled.div`
-  background: #f3f0ff;
+  background: ${({ theme }) => theme.background};
   border-radius: 10px;
   padding: 1.2rem 1.3rem;
   margin-bottom: 1.2rem;
-  box-shadow: 0 1px 4px rgba(60,60,120,0.04);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   display: flex;
   align-items: flex-start;
   gap: 0.7rem;
@@ -293,14 +333,14 @@ const ExampleContent = styled.div`
 const ExampleTitle = styled.div`
   font-size: 1.13rem;
   font-weight: 700;
-  color: #6d28d9;
+  color: ${({ theme }) => theme.primary};
   margin-bottom: 0.4rem;
   letter-spacing: 0.01em;
 `;
 
 const ExampleText = styled.div`
   font-size: 1.18rem;
-  color: #23223a;
+  color: ${({ theme }) => theme.text};
   line-height: 1.7;
   font-family: 'Fira Sans', 'Segoe UI', Arial, sans-serif;
 `;
@@ -310,22 +350,27 @@ const NavigationButtons = styled.div`
   justify-content: center;
   gap: 1.3rem;
   margin-top: 2.3rem;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
 `;
 
 const Button = styled.button`
   padding: 1rem 2.2rem;
   border-radius: 8px;
-  background-color: #7c3aed;
-  color: #fff;
+  background-color: ${({ theme, $review }) => $review ? theme.error : theme.primary};
+  color: ${({ theme }) => theme.text === '#333333' ? '#fff' : theme.text};
   font-size: 1.18rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 1px 4px rgba(124,58,237,0.09);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.09);
   font-family: 'Fira Sans', 'Segoe UI', Arial, sans-serif;
   &:hover {
-    background-color: #5b21b6;
+    background-color: ${({ theme, $review }) => $review ? theme.error : theme.secondary};
   }
   &:disabled {
     opacity: 0.6;
@@ -337,7 +382,7 @@ const Progress = styled.div`
   text-align: center;
   margin-top: 1.4rem;
   font-size: 1.13rem;
-  color: #3a2476;
+  color: ${({ theme }) => theme.text};
   font-family: 'Fira Sans', 'Segoe UI', Arial, sans-serif;
 `;
 
@@ -465,7 +510,7 @@ const VerbalHelp = () => {
             <Container>
                 <Title>GRE Verbal Help</Title>
                 <ListDropdownContainer>
-                    <label htmlFor="list-select" style={{ fontWeight: 600, color: '#3a2476', fontSize: '1.08rem' }}>Select List:</label>
+                    <label htmlFor="list-select" style={{ fontWeight: 600, color: '${({ theme }) => theme.text}', fontSize: '1.08rem' }}>Select List:</label>
                     <ListSelect id="list-select" value={selectedList} onChange={handleListChange}>
                         {Object.keys(allLists).map((listKey, idx) => (
                             <option key={listKey} value={listKey}>List {idx + 1}</option>
@@ -504,6 +549,9 @@ const VerbalHelp = () => {
                                     $completed={completed}
                                     $review={review}
                                     onClick={() => handleSidebarClick(idx)}
+                                    style={{
+                                        fontWeight: idx === currentIndex ? 700 : 500,
+                                    }}
                                 >
                                     {w.Word}
                                     {review ? (
@@ -515,7 +563,7 @@ const VerbalHelp = () => {
                             );
                         })}
                     </Sidebar>
-                    <Card review={isReview}>
+                    <Card $review={isReview}>
                         {currentWord ? (
                             <>
                                 <Word>{currentWord.Word}</Word>
@@ -544,7 +592,11 @@ const VerbalHelp = () => {
                                 Previous
                             </Button>
                             <Button
-                                style={{ background: isReview ? '#e57373' : '#fbbf24', color: isReview ? '#fff' : '#7c3aed', minWidth: 120 }}
+                                style={{
+                                    background: isReview ? defaultTheme.error : defaultTheme.primary,
+                                    color: isReview ? '#fff' : defaultTheme.text === '#333333' ? '#fff' : defaultTheme.text,
+                                    minWidth: 120
+                                }}
                                 onClick={handleMarkForReview}
                             >
                                 {isReview ? 'Unmark Review' : 'Mark for Review'}
@@ -559,27 +611,6 @@ const VerbalHelp = () => {
                     Card {currentIndex + 1} of {words.length}
                 </Progress>
             </Container>
-            <footer style={{ width: '100%', background: '#23272f', color: '#fff', textAlign: 'center', padding: '1.2rem 0 1rem 0', marginTop: '2.5rem', fontSize: '1.08rem', letterSpacing: '0.01em', boxShadow: '0 -2px 8px rgba(0,0,0,0.07)', position: 'relative' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: 60 }}>
-                    <span style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', width: '100%', pointerEvents: 'none' }}>
-                        <b>ScoreWise</b> &copy; {new Date().getFullYear()}<br />
-                        Built and developed by Mithil Mistry & Hasti Vakani
-                    </span>
-                    <div style={{ position: 'absolute', right: 24, top: '50%', transform: 'translateY(-50%)' }}>
-                        <a href="mailto:Mithil20056mistry@gmail.com" title="Contact Us: Mithil20056mistry@gmail.com" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#FFDD00', color: '#23272f', borderRadius: '50%', width: 40, height: 40, fontWeight: 600, fontSize: '18px', textDecoration: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.08)', transition: 'background 0.2s, color 0.2s' }}>
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="22,6 12,13 2,6" /></svg>
-                        </a>
-                    </div>
-                </div>
-                <div style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <script id="clustrmaps" type="text/javascript" src="//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM"></script>
-                </div>
-                <noscript>
-                    <a href="http://www.clustrmaps.com/map/Mithilmistry.tech" title="Visit tracker for Mithilmistry.tech">
-                        <img src="//www.clustrmaps.com/map_v2.png?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM" alt="ClustrMaps" style={{ width: 80, height: 40, objectFit: 'contain' }} />
-                    </a>
-                </noscript>
-            </footer>
         </>
     );
 };

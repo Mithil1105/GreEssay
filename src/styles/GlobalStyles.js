@@ -7,6 +7,12 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
