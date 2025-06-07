@@ -308,6 +308,7 @@ const QuantHelp = () => {
                     </DropdownSection>
                 ))}
             </PageContainer>
+            {/*
             <footer style={{ width: '100%', background: '#23272f', color: '#fff', textAlign: 'center', padding: '1.2rem 0 1rem 0', marginTop: '2.5rem', fontSize: '1.08rem', letterSpacing: '0.01em', boxShadow: '0 -2px 8px rgba(0,0,0,0.07)', position: 'relative' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: 60 }}>
                     <span style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', width: '100%', pointerEvents: 'none' }}>
@@ -329,6 +330,7 @@ const QuantHelp = () => {
                     </a>
                 </noscript>
             </footer>
+            */}
         </>
     );
 };

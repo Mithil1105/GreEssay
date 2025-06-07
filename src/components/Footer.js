@@ -106,7 +106,6 @@ const FooterContentWrapper = styled.div`
 const FooterTextContainer = styled.div`
   text-align: center;
   width: 100%;
-  pointer-events: none;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -120,43 +119,35 @@ const FooterTextContainer = styled.div`
 `;
 
 const Footer = () => {
-    const currentYear = new Date().getFullYear();
-    const clustrRef = React.useRef(null);
+  const currentYear = new Date().getFullYear();
 
-    React.useEffect(() => {
-        if (clustrRef.current) {
-            const script = document.createElement('script');
-            script.id = 'clustrmaps';
-            script.type = 'text/javascript';
-            script.src = '//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM';
-            script.async = true;
-            clustrRef.current.appendChild(script);
-        }
-    }, []);
-
-    return (
-        <FooterContainer>
-            <FooterContentWrapper>
-                <FooterTextContainer>
-                    <FooterText>
-                        ScoreWise &copy; {currentYear}<br />
-                        Built and developed by <a href="https://github.com/Mithil1105" target="_blank" rel="noopener noreferrer">Mithil Mistry</a> & Hasti Vakani
-                    </FooterText>
-                </FooterTextContainer>
-                <EmailIconContainer>
-                    <EmailLink href="mailto:Mithil20056mistry@gmail.com" title="Contact Us: Mithil20056mistry@gmail.com">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="22,6 12,13 2,6" /></svg>
-                    </EmailLink>
-                </EmailIconContainer>
-            </FooterContentWrapper>
-            <ClustrMapsContainer ref={clustrRef} />
-            <noscript>
-                <a href="http://www.clustrmaps.com/map/Mithilmistry.tech" title="Visit tracker for Mithilmistry.tech">
-                    <img src="//www.clustrmaps.com/map_v2.png?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM" alt="ClustrMaps" style={{ width: 80, height: 40, objectFit: 'contain' }} />
-                </a>
-            </noscript>
-        </FooterContainer>
-    );
+  return (
+    <FooterContainer>
+      <FooterContentWrapper>
+        <FooterTextContainer>
+          <FooterText>
+            ScoreWise &copy; {currentYear}<br />
+            Built and developed by <a href="https://github.com/Mithil1105" target="_blank" rel="noopener noreferrer">Mithil Mistry</a> & Hasti Vakani
+          </FooterText>
+        </FooterTextContainer>
+        <EmailIconContainer>
+          <EmailLink href="mailto:Mithil20056mistry@gmail.com" title="Contact Us: Mithil20056mistry@gmail.com">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="22,6 12,13 2,6" /></svg>
+          </EmailLink>
+        </EmailIconContainer>
+      </FooterContentWrapper>
+      <ClustrMapsContainer>
+        <div id="clustrmaps" style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <script type="text/javascript" src="//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM"></script>
+        </div>
+      </ClustrMapsContainer>
+      <noscript>
+        <a href="http://www.clustrmaps.com/map/Mithilmistry.tech" title="Visit tracker for Mithilmistry.tech">
+          <img src="//www.clustrmaps.com/map_v2.png?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM" alt="ClustrMaps" style={{ width: 80, height: 40, objectFit: 'contain' }} />
+        </a>
+      </noscript>
+    </FooterContainer>
+  );
 };
 
 export default Footer; 
