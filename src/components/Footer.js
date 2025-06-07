@@ -75,20 +75,6 @@ const EmailLink = styled.a`
   }
 `;
 
-const ClustrMapsContainer = styled.div`
-  margin: 0.5rem auto;
-  width: 80px;
-  height: 40px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 600px) {
-    margin-top: 10px;
-    order: 3;
-  }
-`;
-
 const FooterContentWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -136,16 +122,6 @@ const Footer = () => {
           </EmailLink>
         </EmailIconContainer>
       </FooterContentWrapper>
-      <ClustrMapsContainer>
-        <div id="clustrmaps" style={{ margin: '0.5rem auto', width: 80, height: 40, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <script type="text/javascript" src="//clustrmaps.com/map_v2.js?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM"></script>
-        </div>
-      </ClustrMapsContainer>
-      <noscript>
-        <a href="http://www.clustrmaps.com/map/Mithilmistry.tech" title="Visit tracker for Mithilmistry.tech">
-          <img src="//www.clustrmaps.com/map_v2.png?d=AYG_JMwPCNULF1JiGcb1M92oLMUck1L-32YGpkdm1FM" alt="ClustrMaps" style={{ width: 80, height: 40, objectFit: 'contain' }} />
-        </a>
-      </noscript>
     </FooterContainer>
   );
 };

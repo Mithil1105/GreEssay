@@ -45,4 +45,15 @@ export const GlobalStyles = createGlobalStyle`
   input, textarea {
     font-family: inherit;
   }
+
+  #clustrmaps-wrapper {
+    margin: 0.5rem auto;
+    width: 80px;
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #23272f; /* Match footer background */
+  }
 `; 
