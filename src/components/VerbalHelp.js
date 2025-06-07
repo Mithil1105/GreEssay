@@ -605,6 +605,19 @@ const VerbalHelp = () => {
                                 Next
                             </Button>
                         </NavigationButtons>
+                        <Button
+                            style={{ background: defaultTheme.error, color: '#fff', fontSize: '1rem', padding: '0.7rem 1.2rem', borderRadius: 8, marginTop: '1.5rem', width: '100%' }}
+                            onClick={() => {
+                                if (window.confirm('Are you sure you want to clear all history (ticks and learned words)?')) {
+                                    setCompletedWords({});
+                                    setReviewWords({});
+                                    localStorage.removeItem('verbalHelpCompletedWords');
+                                    localStorage.removeItem('verbalHelpReviewWords');
+                                }
+                            }}
+                        >
+                            Clear History
+                        </Button>
                     </Card>
                 </MainFlex>
                 <Progress>
