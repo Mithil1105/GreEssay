@@ -18,6 +18,7 @@ import Navigation from './components/Navigation';
 import QuantHelp from './QuantHelp';
 import QuantCalculator from './QuantCalculator';
 import VerbalHelp from './components/VerbalHelp';
+import Footer from './components/Footer';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -125,6 +126,7 @@ function App() {
                 <Route path="/verbal-help" element={<VerbalHelp />} />
               </Routes>
             </div>
+            <Footer />
           </div>
         </Router>
       </ThemeProvider>
