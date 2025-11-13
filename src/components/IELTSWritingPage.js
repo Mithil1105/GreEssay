@@ -455,23 +455,25 @@ export default function IELTSWritingPage() {
     localStorage.setItem('ieltsCurrentResult', JSON.stringify(currentResult));
   }, [currentResult]);
 
-  // WPM calculator
+  // WPM calculator - updates live as user types
   useEffect(() => {
-    if (timerRunning && startTime) {
-      const interval = setInterval(() => {
-        const minutes = (Date.now() - startTime) / 60000;
-        const wordCount = answer.trim().split(/\s+/).filter(Boolean).length;
-        const currentWpm = Math.floor(wordCount / minutes || 0);
-        setWPM(currentWpm);
-        setMaxWpm(prev => Math.max(prev, currentWpm));
-        setWords(wordCount);
-      }, 1000);
-      return () => clearInterval(interval);
-    } else if (!timerRunning) {
+    if (!timerRunning) {
       const wordCount = answer.trim().split(/\s+/).filter(Boolean).length;
       setWords(wordCount);
+      return;
     }
-  }, [timerRunning, startTime, answer]);
+    
+    if (!startTime) return;
+    
+    const elapsed = Date.now() - startTime;
+    const minutes = elapsed / 60000;
+    const wordCount = answer.trim().split(/\s+/).filter(Boolean).length;
+    const currentWpm = minutes > 0 ? Math.floor(wordCount / minutes) : 0;
+    
+    setWPM(currentWpm);
+    setMaxWpm(prev => Math.max(prev, currentWpm));
+    setWords(wordCount);
+  }, [answer, timerRunning, startTime]);
 
   const handleAnswerChange = (e) => {
     if (!timerRunning) return;
@@ -504,6 +506,8 @@ export default function IELTSWritingPage() {
     setWPM(0);
     setMaxWpm(0);
     setWords(0);
+    setShowResult(false);
+    setFinalStats(null);
     setTimerRunning(true);
     setStartTime(Date.now());
     timerRef.current = setInterval(() => {
@@ -511,6 +515,10 @@ export default function IELTSWritingPage() {
         if (prev <= 1) {
           clearInterval(timerRef.current);
           setTimerRunning(false);
+          // Auto-stop test when time runs out
+          setTimeout(() => {
+            stopTest(false);
+          }, 100);
           return 0;
         }
         return prev - 1;
@@ -518,8 +526,8 @@ export default function IELTSWritingPage() {
     }, 1000);
   };
 
-  const stopTest = () => {
-    if (!window.confirm('Are you sure you want to stop the test?')) return;
+  const stopTest = (manual = true) => {
+    if (manual && !window.confirm('Are you sure you want to stop the test?')) return;
     clearInterval(timerRef.current);
     setTimerRunning(false);
     setShowResult(true);
@@ -554,6 +562,12 @@ export default function IELTSWritingPage() {
     // Add to previous results
     setPreviousResults(prev => [result, ...prev]);
     setStartTime(null);
+
+    // Clear image and question after saving result
+    setQuestionImage(null);
+    setQuestionText('');
+    localStorage.removeItem('ieltsQuestionImage');
+    localStorage.removeItem('ieltsQuestion');
   };
 
   const handleTaskChange = (e) => {
@@ -697,6 +711,16 @@ export default function IELTSWritingPage() {
     }
   };
 
+  const removeImage = () => {
+    setQuestionImage(null);
+    localStorage.removeItem('ieltsQuestionImage');
+    // Reset file input
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   return (
     <Container>
       <Title>IELTS Writing Practice</Title>
@@ -711,11 +735,21 @@ export default function IELTSWritingPage() {
           />
 
           <SetupLabel>Upload Image (optional):</SetupLabel>
-          <FileInput 
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageUpload}
-          />
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
+            <FileInput 
+              type="file" 
+              accept="image/*" 
+              onChange={handleImageUpload}
+            />
+            {questionImage && (
+              <Button $red onClick={removeImage} style={{ margin: 0 }}>
+                Remove Image
+              </Button>
+            )}
+          </div>
+          {questionImage && (
+            <QuestionImage src={questionImage} alt="Question Preview" style={{ marginBottom: '1rem' }} />
+          )}
         </SetupSection>
       )}
 
