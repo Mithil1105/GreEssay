@@ -14,6 +14,7 @@ import {
 import { useTheme } from './hooks/useTheme';
 import TypingTest from './components/TypingTest';
 import GREWriting from './components/GREWriting';
+import IELTSWritingPage from './components/IELTSWritingPage';
 import Navigation from './components/Navigation';
 import QuantHelp from './QuantHelp';
 import QuantCalculator from './QuantCalculator';
@@ -120,6 +121,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<GREWriting />} />
                 <Route path="/gre-writing" element={<GREWriting />} />
+                <Route path="/ielts-writing" element={<IELTSWritingPage />} />
                 <Route path="/typing-practice" element={<TypingTest />} />
                 <Route path="/quant-help" element={<QuantHelp />} />
                 <Route path="/quant-calculator" element={<QuantCalculator />} />

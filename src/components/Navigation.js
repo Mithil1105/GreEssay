@@ -184,6 +184,9 @@ const Navigation = ({ cycleTheme, currentTheme, themeOptions, setTheme }) => {
         <NavButton to="/gre-writing" active={location.pathname === '/gre-writing' || location.pathname === '/' ? 1 : 0}>
           Essay Practice
         </NavButton>
+        <NavButton to="/ielts-writing" active={location.pathname === '/ielts-writing' ? 1 : 0}>
+          IELTS Writing
+        </NavButton>
         <NavButton to="/typing-practice" active={location.pathname === '/typing-practice' ? 1 : 0}>
           Typing Practice
         </NavButton>
