@@ -501,6 +501,9 @@ export default function IELTSWritingPage() {
       alert('Please enter a question or upload an image before starting the test.');
       return;
     }
+    // Reset timer to correct duration based on task
+    const initialTime = task === 'task1' ? 20 * 60 : 40 * 60;
+    setTimeLeft(initialTime);
     setAnswer('');
     setAccuracyStats({ totalKeystrokes: 0, backspaceCount: 0 });
     setWPM(0);
