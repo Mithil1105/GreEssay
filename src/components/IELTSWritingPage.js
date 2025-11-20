@@ -843,108 +843,6 @@ export default function IELTSWritingPage() {
           <div style={{ marginTop: '1.5rem' }}>
             <Button onClick={() => handleDownload(currentResult)} $green>Download Essay (.docx)</Button>
           </div>
-
-          <PreviousResultsContainer>
-            <ResultsHeader>
-              <h3>Previous IELTS Writing Results</h3>
-              <Button $red onClick={clearHistory}>Clear History</Button>
-            </ResultsHeader>
-
-            <InfoBox>
-              <b>Note:</b> Your essay results are stored in your browser's local storage.
-              They will persist until you clear your browser data or manually clear the history.
-              Results are specific to this browser and device.
-            </InfoBox>
-
-            <ResultsList>
-              {previousResults.length === 0 ? (
-                <p style={{ fontStyle: 'italic', opacity: 0.7 }}>No previous results</p>
-              ) : (
-                previousResults.map((result) => (
-                  <ResultItem key={result.id}>
-                    <ResultInfo>
-                      <ResultDate>{result.date}</ResultDate>
-                      <ResultTopic>{result.task}: {result.question ? result.question.slice(0, 80) : 'Image Question'}...</ResultTopic>
-                    </ResultInfo>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <Button onClick={() => openResultModal(result)}>View Result</Button>
-                      <Button $red onClick={() => deleteResult(result.id)}>Delete</Button>
-                    </div>
-                  </ResultItem>
-                ))
-              )}
-            </ResultsList>
-          </PreviousResultsContainer>
-
-          {selectedResult && (
-            <Modal onClick={closeResultModal}>
-              <ModalContent onClick={e => e.stopPropagation()}>
-                <CloseButton onClick={closeResultModal}>&times;</CloseButton>
-
-                <ModalSection>
-                  <h2>IELTS Writing Result</h2>
-                  <ResultDate>{selectedResult.date}</ResultDate>
-                </ModalSection>
-
-                <ModalSection>
-                  <h3>Task: {selectedResult.task}</h3>
-                  <h4>Question</h4>
-                  <p>{selectedResult.question || 'Image Question'}</p>
-                  {selectedResult.questionImage && (
-                    <QuestionImage src={selectedResult.questionImage} alt="Question" style={{ marginTop: '1rem' }} />
-                  )}
-                </ModalSection>
-
-                <ModalSection>
-                  <h3>Statistics</h3>
-                  <StatGrid>
-                    <div>
-                      <h4>Performance</h4>
-                      <ul>
-                        <li>
-                          <span>Words:</span>
-                          <span>{selectedResult.stats?.words || 'N/A'}</span>
-                        </li>
-                        <li>
-                          <span>WPM:</span>
-                          <span>{selectedResult.stats?.wpm || 'N/A'}</span>
-                        </li>
-                        <li>
-                          <span>Max WPM:</span>
-                          <span>{selectedResult.stats?.maxWpm || 'N/A'}</span>
-                        </li>
-                        <li>
-                          <span>Accuracy:</span>
-                          <span>{selectedResult.stats?.accuracy || 'N/A'}%</span>
-                        </li>
-                        <li>
-                          <span>Backspace Count:</span>
-                          <span>{selectedResult.stats?.backspaceCount || 'N/A'}</span>
-                        </li>
-                        <li>
-                          <span>Total Keystrokes:</span>
-                          <span>{selectedResult.stats?.totalKeystrokes || 'N/A'}</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </StatGrid>
-                </ModalSection>
-
-                <ModalSection>
-                  <h3>Answer</h3>
-                  <EssayText>
-                    {selectedResult.answer}
-                  </EssayText>
-                </ModalSection>
-
-                <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-                  <Button $green onClick={() => handleDownload(selectedResult)}>
-                    Download Essay (.docx)
-                  </Button>
-                </div>
-              </ModalContent>
-            </Modal>
-          )}
         </ResultBox>
       )}
 
@@ -954,6 +852,106 @@ export default function IELTSWritingPage() {
             Export as PDF
           </Button>
         </div>
+      )}
+
+      {previousResults.length > 0 && (
+        <PreviousResultsContainer>
+          <ResultsHeader>
+            <h3>Previous IELTS Writing Results</h3>
+            <Button $red onClick={clearHistory}>Clear History</Button>
+          </ResultsHeader>
+
+          <InfoBox>
+            <b>Note:</b> Your essay results are stored in your browser's local storage.
+            They will persist until you clear your browser data or manually clear the history.
+            Results are specific to this browser and device.
+          </InfoBox>
+
+          <ResultsList>
+            {previousResults.map((result) => (
+              <ResultItem key={result.id}>
+                <ResultInfo>
+                  <ResultDate>{result.date}</ResultDate>
+                  <ResultTopic>{result.task}: {result.question ? result.question.slice(0, 80) : 'Image Question'}...</ResultTopic>
+                </ResultInfo>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <Button onClick={() => openResultModal(result)}>View Result</Button>
+                  <Button $red onClick={() => deleteResult(result.id)}>Delete</Button>
+                </div>
+              </ResultItem>
+            ))}
+          </ResultsList>
+        </PreviousResultsContainer>
+      )}
+
+      {selectedResult && (
+        <Modal onClick={closeResultModal}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+            <CloseButton onClick={closeResultModal}>&times;</CloseButton>
+
+            <ModalSection>
+              <h2>IELTS Writing Result</h2>
+              <ResultDate>{selectedResult.date}</ResultDate>
+            </ModalSection>
+
+            <ModalSection>
+              <h3>Task: {selectedResult.task}</h3>
+              <h4>Question</h4>
+              <p>{selectedResult.question || 'Image Question'}</p>
+              {selectedResult.questionImage && (
+                <QuestionImage src={selectedResult.questionImage} alt="Question" style={{ marginTop: '1rem' }} />
+              )}
+            </ModalSection>
+
+            <ModalSection>
+              <h3>Statistics</h3>
+              <StatGrid>
+                <div>
+                  <h4>Performance</h4>
+                  <ul>
+                    <li>
+                      <span>Words:</span>
+                      <span>{selectedResult.stats?.words || 'N/A'}</span>
+                    </li>
+                    <li>
+                      <span>WPM:</span>
+                      <span>{selectedResult.stats?.wpm || 'N/A'}</span>
+                    </li>
+                    <li>
+                      <span>Max WPM:</span>
+                      <span>{selectedResult.stats?.maxWpm || 'N/A'}</span>
+                    </li>
+                    <li>
+                      <span>Accuracy:</span>
+                      <span>{selectedResult.stats?.accuracy || 'N/A'}%</span>
+                    </li>
+                    <li>
+                      <span>Backspace Count:</span>
+                      <span>{selectedResult.stats?.backspaceCount || 'N/A'}</span>
+                    </li>
+                    <li>
+                      <span>Total Keystrokes:</span>
+                      <span>{selectedResult.stats?.totalKeystrokes || 'N/A'}</span>
+                    </li>
+                  </ul>
+                </div>
+              </StatGrid>
+            </ModalSection>
+
+            <ModalSection>
+              <h3>Answer</h3>
+              <EssayText>
+                {selectedResult.answer}
+              </EssayText>
+            </ModalSection>
+
+            <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+              <Button $green onClick={() => handleDownload(selectedResult)}>
+                Download Essay (.docx)
+              </Button>
+            </div>
+          </ModalContent>
+        </Modal>
       )}
     </Container>
   );
